@@ -47,7 +47,7 @@ MPESA_CONFIG = {
 # M-Pesa Consultation Callback URL
 MPESA_CONSULTATION_CALLBACK_URL = os.getenv('MPESA_CONSULTATION_CALLBACK_URL', 'https://latina-subtruncate-haughtily.ngrok-free.dev/consultations/payment/callback/')
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost,testserver,latina-subtruncate-haughtily.ngrok-free.dev,constructionhub.onrender.com').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost,testserver,latina-subtruncate-haughtily.ngrok-free.dev,constructionhub.onrender.com,consttuctionhub.onrender.com').split(',')
 
 # Application definition
 
@@ -77,6 +77,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -155,6 +156,9 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
+
+# WhiteNoise configuration for serving static files in production
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media files (user uploads)
 MEDIA_URL = '/media/'
