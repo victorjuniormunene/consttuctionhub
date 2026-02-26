@@ -13,3 +13,4 @@ PyJWT==2.8.0
 cryptography==42.0.5
 africastalking==1.2.0
 requests>=2.26.0
+openpyxl==3.1.3
