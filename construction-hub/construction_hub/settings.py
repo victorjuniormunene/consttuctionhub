@@ -40,7 +40,7 @@ MPESA_CONFIG = {
 # M-Pesa Consultation Callback URL
 MPESA_CONSULTATION_CALLBACK_URL = os.getenv('MPESA_CONSULTATION_CALLBACK_URL', 'https://latina-subtruncate-haughtily.ngrok-free.dev/consultations/payment/callback/')
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost,testserver,latina-subtruncate-haughtily.ngrok-free.dev').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost,testserver,latina-subtruncate-haughtily.ngrok-free.dev,consttuctionhub.onrender.com').split(',')
 
 # Application definition
 
