@@ -23,7 +23,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'your-default-secret-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'True') == 'True'
+# Properly handle boolean conversion from environment variables
+def str_to_bool(value):
+    """Convert string environment variable to boolean"""
+    if isinstance(value, bool):
+        return value
+    return str(value).lower() in ('true', '1', 'yes', 'on')
+
+DEBUG = str_to_bool(os.getenv('DEBUG', 'True'))
 
 # M-Pesa Configuration
 MPESA_CONFIG = {
@@ -40,7 +47,7 @@ MPESA_CONFIG = {
 # M-Pesa Consultation Callback URL
 MPESA_CONSULTATION_CALLBACK_URL = os.getenv('MPESA_CONSULTATION_CALLBACK_URL', 'https://latina-subtruncate-haughtily.ngrok-free.dev/consultations/payment/callback/')
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost,testserver,latina-subtruncate-haughtily.ngrok-free.dev,consttuctionhub.onrender.com').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost,testserver,latina-subtruncate-haughtily.ngrok-free.dev,constructionhub.onrender.com').split(',')
 
 # Application definition
 
