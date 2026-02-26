@@ -32,6 +32,8 @@ env/
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
+construction_hub/db.sqlite3
+construction_hub/db.sqlite3-journal
 /media
 /staticfiles
 
