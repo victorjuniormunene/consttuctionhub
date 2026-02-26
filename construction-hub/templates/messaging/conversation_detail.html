@@ -23,14 +23,20 @@
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
 .page-header {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-  padding: 1.5rem;
-  border-radius: 20px;
+  background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #16213e 100%);
+  padding: 2rem;
+  border-radius: 24px;
   margin-bottom: 1.5rem;
   position: relative;
   overflow: hidden;
   animation: fadeInUp 0.5s ease-out;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
 }
 
 .page-header::before {
@@ -41,7 +47,22 @@
   right: 0;
   bottom: 0;
   background: 
-    radial-gradient(circle at 80% 20%, rgba(255, 127, 49, 0.1) 0%, transparent 40%);
+    radial-gradient(circle at 90% 10%, rgba(255, 107, 107, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 10% 90%, rgba(78, 205, 196, 0.08) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.page-header::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.02), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 4s infinite;
+  pointer-events: none;
 }
 
 .page-header-content {
@@ -56,16 +77,18 @@
   color: white;
   text-decoration: none;
   font-weight: 600;
-  padding: 0.5rem 1rem;
-  background: rgba(255,255,255,0.1);
-  border-radius: 10px;
+  padding: 0.6rem 1.2rem;
+  background: rgba(255,255,255,0.08);
+  border-radius: 12px;
   transition: all 0.3s ease;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid rgba(255,255,255,0.1);
 }
 
 .back-button:hover {
-  background: rgba(255,255,255,0.2);
-  transform: translateX(-3px);
+  background: rgba(255,255,255,0.15);
+  transform: translateX(-4px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
 .chat-header-info {
@@ -75,46 +98,61 @@
 }
 
 .chat-avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #ff7f31, #ff9a5e);
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #ff6b6b, #ffa502);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   color: white;
   font-weight: 700;
-  box-shadow: 0 4px 15px rgba(255, 127, 49, 0.3);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.35);
+  position: relative;
+}
+
+.chat-avatar::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  background: #2ed573;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
 .chat-title {
   color: white;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 700;
   margin: 0;
 }
 
 .chat-subtitle {
-  color: rgba(255,255,255,0.7);
+  color: rgba(255,255,255,0.65);
   font-size: 0.85rem;
   margin: 0;
 }
 
 .order-card {
   background: white;
-  border-radius: 16px;
-  padding: 1.5rem;
+  border-radius: 24px;
+  padding: 2rem;
   margin-bottom: 1.5rem;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  box-shadow: 0 4px 30px rgba(0,0,0,0.06);
   animation: fadeInUp 0.5s ease-out;
+  border: 1px solid rgba(0,0,0,0.04);
 }
 
 .order-card-title {
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 700;
-  color: #1a1a2e;
-  margin: 0 0 1rem 0;
+  color: #1a1a3e;
+  margin: 0 0 1.25rem 0;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -124,20 +162,21 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 1.5rem;
-  padding: 1.25rem;
-  background: #f8f9fa;
-  border-radius: 14px;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f8f9fa, #ffffff);
+  border-radius: 18px;
   position: relative;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.03);
 }
 
 .order-status-timeline::before {
   content: '';
   position: absolute;
-  top: 38px;
-  left: 10%;
-  right: 10%;
-  height: 3px;
-  background: #e0e0e0;
+  top: 42px;
+  left: 12%;
+  right: 12%;
+  height: 4px;
+  background: #e8e8e8;
   border-radius: 2px;
 }
 
@@ -149,45 +188,45 @@
 }
 
 .status-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: #e0e0e0;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #e8e8e8;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 0.5rem;
-  font-size: 1.2rem;
+  margin: 0 auto 0.6rem;
+  font-size: 1.3rem;
   transition: all 0.3s ease;
 }
 
 .status-step.active .status-icon {
-  background: linear-gradient(135deg, #ff7f31, #ff9a5e);
+  background: linear-gradient(135deg, #ff6b6b, #ffa502);
   color: white;
-  box-shadow: 0 6px 20px rgba(255, 127, 49, 0.4);
+  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
   transform: scale(1.1);
 }
 
 .status-step.completed .status-icon {
   background: linear-gradient(135deg, #2ed573, #20bf6b);
   color: white;
-  box-shadow: 0 4px 15px rgba(46, 213, 115, 0.3);
+  box-shadow: 0 6px 20px rgba(46, 213, 115, 0.35);
 }
 
 .status-label {
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   color: #666;
   font-weight: 500;
 }
 
 .status-step.active .status-label {
-  color: #ff7f31;
-  font-weight: 600;
+  color: #ff6b6b;
+  font-weight: 700;
 }
 
 .status-step.completed .status-label {
   color: #2ed573;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .order-details {
@@ -195,12 +234,12 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .order-info {
   display: flex;
-  gap: 1.5rem;
+  gap: 2rem;
 }
 
 .order-info-item {
@@ -210,64 +249,98 @@
 
 .order-info-label {
   font-size: 0.75rem;
-  color: #999;
-  margin-bottom: 0.25rem;
+  color: #888;
+  margin-bottom: 0.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .order-info-value {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #1a1a2e;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1a3e;
 }
 
 .status-badge {
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
+  padding: 0.55rem 1.1rem;
+  border-radius: 22px;
   font-size: 0.85rem;
   font-weight: 600;
 }
 
-.status-badge.pending { background: #fff5f5; color: #ff4757; }
-.status-badge.paid { background: #e8f4ff; color: #1e90ff; }
-.status-badge.shipped { background: #fff8e8; color: #ffa502; }
-.status-badge.completed { background: #e8f9ef; color: #2ed573; }
+.status-badge.pending { 
+  background: linear-gradient(135deg, #ffe5e5, #fff0f0); 
+  color: #ff4757; 
+}
+.status-badge.paid { 
+  background: linear-gradient(135deg, #e0f7fa, #e8f4f4); 
+  color: #0abde3; 
+}
+.status-badge.shipped { 
+  background: linear-gradient(135deg, #fff8e8, #fffbf0); 
+  color: #ffa502; 
+}
+.status-badge.completed { 
+  background: linear-gradient(135deg, #e8f9ef, #f0fff4); 
+  color: #2ed573; 
+}
 
 .chat-card {
   background: white;
-  border-radius: 20px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  border-radius: 24px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.08);
   overflow: hidden;
   animation: fadeInUp 0.5s ease-out;
+  border: 1px solid rgba(0,0,0,0.04);
 }
 
 .chat-header {
-  padding: 1.25rem 1.5rem;
+  padding: 1.5rem 2rem;
   border-bottom: 1px solid #f0f0f0;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background: linear-gradient(135deg, #fafbfc, #ffffff);
 }
 
 .chat-header-title {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 700;
-  color: #1a1a2e;
+  color: #1a1a3e;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
   margin: 0;
 }
 
+.chat-online-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #2ed573;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.chat-online-badge::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: #2ed573;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(46, 213, 115, 0.5);
+}
+
 .messages-container {
-  max-height: 450px;
+  max-height: 500px;
   overflow-y: auto;
-  padding: 1.5rem;
-  background: linear-gradient(180deg, #f8f9fa, #ffffff);
+  padding: 2rem;
+  background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
 }
 
 .message-wrapper {
   display: flex;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
   animation: messageAppear 0.3s ease-out;
 }
 
@@ -280,65 +353,65 @@
 }
 
 .message-bubble {
-  max-width: 70%;
-  padding: 1rem 1.25rem;
-  border-radius: 18px;
+  max-width: 72%;
+  padding: 1.1rem 1.4rem;
+  border-radius: 22px;
   position: relative;
 }
 
 .message-sent {
-  background: linear-gradient(135deg, #ff7f31, #ff9a5e);
+  background: linear-gradient(135deg, #ff6b6b, #ffa502);
   color: white;
-  border-bottom-right-radius: 4px;
-  box-shadow: 0 4px 15px rgba(255, 127, 49, 0.3);
+  border-bottom-right-radius: 6px;
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
 }
 
 .message-received {
   background: white;
-  color: #1a1a2e;
-  border-bottom-left-radius: 4px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  color: #1a1a3e;
+  border-bottom-left-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
   border: 1px solid #f0f0f0;
 }
 
 .message-content {
-  font-size: 0.95rem;
-  line-height: 1.5;
+  font-size: 0.98rem;
+  line-height: 1.55;
   word-wrap: break-word;
 }
 
 .message-time {
   font-size: 0.7rem;
-  opacity: 0.7;
-  margin-top: 0.4rem;
+  opacity: 0.75;
+  margin-top: 0.5rem;
   display: block;
 }
 
 .message-received .message-time {
-  color: #999;
+  color: #888;
 }
 
 .typing-indicator {
   display: none;
-  padding: 1rem;
+  padding: 1rem 1.25rem;
   background: white;
   border-radius: 18px;
   margin-bottom: 1rem;
   width: fit-content;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
   border: 1px solid #f0f0f0;
 }
 
 .typing-indicator.active {
   display: flex;
-  gap: 0.4rem;
+  gap: 0.5rem;
   align-items: center;
 }
 
 .typing-dot {
-  width: 8px;
-  height: 8px;
-  background: #999;
+  width: 9px;
+  height: 9px;
+  background: #888;
   border-radius: 50%;
   animation: pulse 1.4s infinite ease-in-out;
 }
@@ -348,7 +421,7 @@
 .typing-dot:nth-child(3) { animation-delay: 0.4s; }
 
 .message-input-wrapper {
-  padding: 1.25rem 1.5rem;
+  padding: 1.5rem 2rem;
   background: white;
   border-top: 1px solid #f0f0f0;
   display: flex;
@@ -358,9 +431,9 @@
 
 .message-input {
   flex: 1;
-  padding: 1rem 1.25rem;
+  padding: 1.1rem 1.5rem;
   border: 2px solid #e8e8e8;
-  border-radius: 14px;
+  border-radius: 16px;
   font-size: 0.95rem;
   outline: none;
   transition: all 0.3s ease;
@@ -368,30 +441,30 @@
 }
 
 .message-input:focus {
-  border-color: #ff7f31;
+  border-color: #ff6b6b;
   background: white;
-  box-shadow: 0 0 0 4px rgba(255, 127, 49, 0.1);
+  box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.1);
 }
 
 .send-button {
-  width: 50px;
-  height: 50px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #ff7f31, #ff9a5e);
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #ff6b6b, #ffa502);
   border: none;
   color: white;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 15px rgba(255, 127, 49, 0.3);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.35);
 }
 
 .send-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 127, 49, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(255, 107, 107, 0.45);
 }
 
 .send-button:disabled {
@@ -402,30 +475,47 @@
 
 .empty-chat {
   text-align: center;
-  padding: 3rem;
+  padding: 4rem;
   color: #999;
 }
 
 .empty-chat-icon {
-  font-size: 3rem;
+  font-size: 3.5rem;
   margin-bottom: 1rem;
-  opacity: 0.5;
+  opacity: 0.4;
+}
+
+.date-separator {
+  text-align: center;
+  margin: 1.5rem 0;
+  position: relative;
+}
+
+.date-separator span {
+  background: #f0f0f0;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  color: #666;
+  font-weight: 500;
 }
 
 @media (max-width: 768px) {
-  .order-status-timeline { padding: 1rem; }
-  .status-icon { width: 36px; height: 36px; font-size: 1rem; }
+  .order-status-timeline { padding: 1.25rem; }
+  .status-icon { width: 40px; height: 40px; font-size: 1.1rem; }
   .order-details { flex-direction: column; align-items: flex-start; }
   .message-bubble { max-width: 85%; }
-  .messages-container { max-height: 350px; }
+  .messages-container { max-height: 380px; padding: 1.25rem; }
+  .chat-header { padding: 1.25rem; }
+  .message-input-wrapper { padding: 1.25rem; }
 }
 </style>
 
-<div class="container" style="max-width: 900px; margin: 0 auto; padding: 2rem 1rem;">
+<div class="container" style="max-width: 950px; margin: 0 auto; padding: 2rem 1rem;">
   <!-- Back Button -->
   <div style="margin-bottom: 1rem;">
     <a href="{% url 'messaging:conversations' %}" class="back-button">
-      ← Back to Messages
+      <span>←</span> Back to Messages
     </a>
   </div>
 
@@ -456,11 +546,15 @@
       <div class="order-info">
         <div class="order-info-item">
           <span class="order-info-label">Order Number</span>
-          <span class="order-info-value">{{ conversation.order.order_number }}</span>
+          <span class="order-info-value">#{{ conversation.order.order_number }}</span>
         </div>
         <div class="order-info-item">
           <span class="order-info-label">Product</span>
           <span class="order-info-value">{{ conversation.order.product.name|default:'N/A' }}</span>
+        </div>
+        <div class="order-info-item">
+          <span class="order-info-label">Supplier</span>
+          <span class="order-info-value">{{ conversation.supplier.username }}</span>
         </div>
       </div>
       <span class="status-badge {{ conversation.order.status }}">
@@ -475,17 +569,13 @@
       <h3 class="chat-header-title">
         💬 Chat with 
         {% if conversation.customer == request.user %}
-          <span style="color: #ff7f31;">{{ conversation.supplier.username }}</span>
+          <span style="background: linear-gradient(135deg, #ff6b6b, #ffa502); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{{ conversation.supplier.username }}</span>
         {% else %}
-          <span style="color: #ff7f31;">{{ conversation.customer.username }}</span>
+          <span style="background: linear-gradient(135deg, #ff6b6b, #ffa502); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{{ conversation.customer.username }}</span>
         {% endif %}
       </h3>
-      <div class="chat-header-info">
-        <span style="color: #666; font-size: 0.85rem;">
-          {% if conversation.unread_count > 0 %}
-            {{ conversation.unread_count }} unread
-          {% endif %}
-        </span>
+      <div class="chat-online-badge">
+        Online
       </div>
     </div>
     
@@ -495,7 +585,7 @@
         <div class="message-wrapper {% if message.sender == request.user %}sent{% else %}received{% endif %}">
           <div class="message-bubble {% if message.sender == request.user %}message-sent{% else %}message-received{% endif %}">
             <div class="message-content">{{ message.content }}</div>
-            <span class="message-time">{{ message.created_at|date:'M d, Y H:i' }}</span>
+            <span class="message-time">{{ message.created_at|date:'M d, Y • H:i' }}</span>
           </div>
         </div>
       {% empty %}
