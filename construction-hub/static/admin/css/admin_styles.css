@@ -1,0 +1,706 @@
+/* ==========================================================================
+   Construction Hub - Professional Admin Styles
+   Makes all admin pages attractive and user-friendly
+   ========================================================================== */
+
+/* ========================================
+   Base Admin Layout Enhancements
+   ======================================== */
+
+/* Improve the overall admin container */
+#container {
+    max-width: 100%;
+}
+
+#content {
+    padding: 20px;
+    background: #f8f9fa;
+    min-height: 100vh;
+}
+
+/* Header improvements */
+#header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+#header h1 {
+    color: #fff !important;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+/* User tools styling */
+#user-tools {
+    padding: 8px 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    margin-top: 5px;
+}
+
+#user-tools a {
+    color: #fff !important;
+    text-decoration: none !important;
+    font-weight: 500;
+}
+
+#user-tools a:hover {
+    opacity: 1;
+}
+
+/* ========================================
+   Breadcrumbs
+   ======================================== */
+
+.breadcrumbs {
+    background: #fff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    font-size: 14px;
+}
+
+.breadcrumbs a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.breadcrumbs a:hover {
+    text-decoration: underline;
+}
+
+/* ========================================
+   Page Header & Titles
+   ======================================== */
+
+#content h1 {
+    color: #1a1a2e;
+    font-weight: 600;
+    font-size: 28px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+/* ========================================
+   Changelist Table (List View)
+   ======================================== */
+
+#result_list {
+    border: none !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+}
+
+#result_list thead th {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+    color: #fff !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    padding: 15px 12px !important;
+    border: none !important;
+}
+
+#result_list tbody tr {
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+#result_list tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+#result_list tbody tr:hover {
+    background-color: #e7f3ff !important;
+    transform: translateX(2px);
+}
+
+#result_list td {
+    padding: 12px 10px !important;
+    vertical-align: middle !important;
+    font-size: 14px;
+}
+
+#result_list td a {
+    color: #007bff;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+#result_list td a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* Row actions */
+#result_list .row-actions {
+    font-size: 12px;
+    padding-top: 5px;
+}
+
+/* ========================================
+   Status Indicators & Badges
+   ======================================== */
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-badge.pending {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffc107;
+}
+
+.status-badge.approved, .status-badge.active, .status-badge.completed {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #28a745;
+}
+
+.status-badge.rejected, .status-badge.inactive, .status-badge.cancelled {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #dc3545;
+}
+
+.status-badge.processed {
+    background: #cce5ff;
+    color: #004085;
+    border: 1px solid #007bff;
+}
+
+/* ========================================
+   Buttons
+   ======================================== */
+
+.button, input[type="submit"], .submit-row input {
+    border-radius: 6px !important;
+    font-weight: 500;
+    padding: 8px 16px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.button:hover, input[type="submit"]:hover, .submit-row input:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.button-default {
+    background: #6c757d !important;
+    border-color: #6c757d !important;
+}
+
+.button-default:hover {
+    background: #5a6268 !important;
+    border-color: #5a6268 !important;
+}
+
+.button-success, .submit-row input.default {
+    background: #28a745 !important;
+    border-color: #28a745 !important;
+}
+
+.button-success:hover {
+    background: #218838 !important;
+    border-color: #218838 !important;
+}
+
+.button-danger, .button-delete {
+    background: #dc3545 !important;
+    border-color: #dc3545 !important;
+}
+
+.button-danger:hover {
+    background: #c82333 !important;
+    border-color: #c82333 !important;
+}
+
+/* Add button */
+.add-another, .related-lookup {
+    background: #007bff;
+    color: #fff !important;
+    padding: 6px 12px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.add-another:hover, .related-lookup:hover {
+    background: #0056b3;
+}
+
+/* ========================================
+   Forms & Fieldsets
+   ======================================== */
+
+fieldset {
+    background: #fff;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+fieldset.collapsed {
+    background: #f8f9fa;
+}
+
+fieldset .legenda, fieldset legend {
+    background: #1a1a2e;
+    color: #fff;
+    padding: 8px 15px;
+    border-radius: 6px 6px 0 0;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: none !important;
+    width: calc(100% + 2px);
+    margin: -20px -20px 20px -20px;
+}
+
+/* Form rows */
+.form-row {
+    padding: 12px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.2s ease;
+}
+
+.form-row:hover {
+    background: #f8f9fa;
+}
+
+.form-row:last-child {
+    border-bottom: none;
+}
+
+/* Input fields */
+input[type="text"], input[type="password"], input[type="email"], 
+input[type="number"], input[type="url"], textarea, select {
+    border-radius: 6px !important;
+    border: 1px solid #ced4da !important;
+    padding: 10px 12px;
+    transition: all 0.2s ease;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1) !important;
+    outline: none;
+}
+
+/* Label styling */
+label {
+    font-weight: 500;
+    color: #495057;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* Help text */
+.help {
+    color: #6c757d;
+    font-size: 12px;
+    margin-top: 5px;
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    border-left: 3px solid #007bff;
+}
+
+/* ========================================
+   Search Bar & Filters
+   ======================================== */
+
+#searchbar {
+    border-radius: 6px !important;
+    padding: 10px 15px !important;
+    border: 1px solid #ced4da !important;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+}
+
+#searchbar:focus {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1) !important;
+}
+
+.search-container {
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Filter sidebar */
+#changelist-filter {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 15px;
+}
+
+#changelist-filter h3 {
+    color: #1a1a2e;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+}
+
+#changelist-filter ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#changelist-filter ul li {
+    padding: 8px 12px;
+    margin: 2px 0;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+#changelist-filter ul li:hover {
+    background: #f8f9fa;
+}
+
+#changelist-filter ul li a {
+    color: #495057;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+#changelist-filter ul li a:hover {
+    color: #007bff;
+}
+
+#changelist-filter .selected {
+    background: #e7f3ff;
+    border-left: 3px solid #007bff;
+}
+
+/* ========================================
+   Actions Bar
+   ======================================== */
+
+.actions {
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.actions label {
+    font-weight: 600;
+    color: #1a1a2e;
+}
+
+.action-select {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+}
+
+/* ========================================
+   Object Tools
+   ======================================== */
+
+.object-tools {
+    background: transparent;
+    margin-bottom: 15px;
+}
+
+.object-tools li {
+    background: #007bff !important;
+    border-radius: 6px !important;
+    transition: all 0.2s ease;
+}
+
+.object-tools li:hover {
+    background: #0056b3 !important;
+}
+
+.object-tools li a {
+    color: #fff !important;
+    font-weight: 500;
+    padding: 8px 15px;
+}
+
+/* ========================================
+   Messages / Notifications
+   ======================================== */
+
+.messagelist {
+    margin-bottom: 20px;
+}
+
+.messagelist li {
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.messagelist .success {
+    background: #d4edda;
+    color: #155724;
+    border-left: 4px solid #28a745;
+}
+
+.messagelist .error {
+    background: #f8d7da;
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+}
+
+.messagelist .warning {
+    background: #fff3cd;
+    color: #856404;
+    border-left: 4px solid #ffc107;
+}
+
+.messagelist .info {
+    background: #cce5ff;
+    color: #004085;
+    border-left: 4px solid #007bff;
+}
+
+/* ========================================
+   Date & Time Pickers
+   ======================================== */
+
+.datetimeshortcuts a {
+    background: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 4px 8px;
+    margin: 0 2px;
+    color: #495057;
+    text-decoration: none;
+}
+
+.datetimeshortcuts a:hover {
+    background: #e9ecef;
+    color: #007bff;
+}
+
+.timezonewarning {
+    font-size: 11px;
+    color: #6c757d;
+}
+
+/* ========================================
+   Related Widgets
+   ======================================== */
+
+.inline-group {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.inline-group thead th {
+    background: #f8f9fa !important;
+    color: #1a1a2e !important;
+    font-weight: 600;
+}
+
+/* ========================================
+   Admin Login Page
+   ======================================== */
+
+.login #header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.login-container {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    padding: 40px;
+    max-width: 400px;
+    margin: 50px auto;
+}
+
+.login-form-row {
+    margin-bottom: 20px;
+}
+
+.login-form-row label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.login #content {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+}
+
+/* ========================================
+   Responsive Design
+   ======================================== */
+
+@media (max-width: 1024px) {
+    #container {
+        flex-direction: column;
+    }
+    
+    #changelist-filter {
+        margin-top: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    #content {
+        padding: 10px;
+    }
+    
+    #result_list thead th,
+    #result_list td {
+        padding: 8px 5px !important;
+        font-size: 12px;
+    }
+    
+    .actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .object-tools {
+        flex-direction: column;
+    }
+}
+
+/* ========================================
+   Custom Admin Specific Styles
+   ======================================== */
+
+/* Contact Message Admin Styles */
+.message-details {
+    background-color: #f8f9fa;
+    border-left: 4px solid #007bff;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+}
+
+.admin-reply {
+    background-color: #e8f5e9;
+    border-left: 4px solid #28a745;
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.reply-textarea {
+    min-height: 150px !important;
+    font-family: 'Courier New', monospace;
+}
+
+/* Consultant Application specific styles */
+.field-approved_by, .field-rejected_by {
+    color: #28a745;
+    font-weight: 500;
+}
+
+.field-submitted_at, .field-approved_at, .field-rejected_at {
+    color: #6c757d;
+    font-size: 0.9em;
+}
+
+/* Action buttons in list view */
+.approve-button, .reject-button {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 12px;
+    margin: 2px;
+    transition: all 0.2s ease;
+}
+
+.approve-button {
+    background-color: #28a745;
+    color: white !important;
+}
+
+.approve-button:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+}
+
+.reject-button {
+    background-color: #dc3545;
+    color: white !important;
+}
+
+.reject-button:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
+}
+
+/* ========================================
+   Empty State
+   ======================================== */
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6c757d;
+}
+
+.empty-state h2 {
+    font-size: 24px;
+    color: #495057;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+/* ========================================
+   Loading States
+   ======================================== */
+
+.loading {
+    opacity: 1;
+    pointer-events: none;
+}
+
+/* ========================================
+   Admin App Brand Colors
+   ======================================== */
+
+.app-accounts { border-left-color: #007bff; }
+.app-consultations { border-left-color: #28a745; }
+.app-orders { border-left-color: #ffc107; }
+.app-products { border-left-color: #17a2b8; }
+.app-suppliers { border-left-color: #6f42c1; }

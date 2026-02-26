@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Payment - Construction Hub{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 3rem; margin-bottom: 3rem;">
+  <div style="max-width: 600px; margin: 0 auto;">
+    <div class="form-card" style="border-top: 4px solid #ff7f31; text-align: center;">
+      <div style="font-size: 3rem; margin-bottom: 1rem;">💳</div>
+      <h1 style="font-size: 1.8rem; color: #ff7f31; margin-bottom: 0.5rem;">Complete Your Payment</h1>
+      <p style="color: #666; margin-bottom: 1.5rem;">Please make payment using Safaricom M-Pesa to complete your order.</p>
+
+      <div style="background: #f4f6f8; padding: 1.5rem; border-radius: 12px; text-align: left; margin-bottom: 1.5rem;">
+        <h3 style="margin: 0 0 1rem 0; color: #333;">Order Details</h3>
+        <p style="margin: 0.5rem 0;"><strong>Order Number:</strong> {{ order.order_number }}</p>
+        {% if order.product %}
+        <p style="margin: 0.5rem 0;"><strong>Product:</strong> {{ order.product.name }}</p>
+        {% else %}
+        <p style="margin: 0.5rem 0;"><strong>Plan:</strong> {{ order.get_plan_type_display|default:order.plan_type|title }}</p>
+        {% endif %}
+        <p style="margin: 0.5rem 0;"><strong>Quantity:</strong> {{ order.quantity }} units</p>
+        <p style="margin: 0.5rem 0;"><strong>Price per unit:</strong> KSH {{ order.price }}</p>
+        <p style="margin: 0.5rem 0; font-weight: 800; color: #ff7f31; font-size: 1.1rem;"><strong>Total Amount:</strong> KSH {{ order.total_cost|floatformat:2 }}</p>
+      </div>
+
+      <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+        <h3 style="margin: 0 0 1rem 0; color: #856404;">Payment Instructions</h3>
+        <p style="margin: 0.5rem 0;"><strong>Payment Method:</strong> Safaricom M-Pesa</p>
+        <p style="margin: 0.5rem 0;"><strong>M-Pesa Pay Bill Number:</strong> <span style="font-size: 1.2rem; font-weight: bold; color: #2e7d32;">{{ payment_number }}</span></p>
+        <p style="margin: 0.5rem 0;"><strong>Business Name:</strong> Construction Hub</p>
+        <p style="margin: 0.5rem 0;"><strong>Amount:</strong> KSH {{ order.total_cost|floatformat:2 }}</p>
+        <p style="margin: 0.5rem 0; font-size: 0.9rem; color: #666;">Go to M-Pesa → Pay Bill → Enter business number {{ payment_number }} → Enter amount → Pay. Include your order number {{ order.order_number }} in the account number/reference field.</p>
+      </div>
+
+      <form method="post" style="margin-bottom: 1.5rem;">
+        {% csrf_token %}
+        <div style="margin-bottom: 1rem;">
+          <label for="phone_number" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #333;">M-Pesa Phone Number:</label>
+          <input type="tel" id="phone_number" name="phone_number" placeholder="e.g., 0712345678" required style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; box-sizing: border-box;">
+          <small style="color: #666; font-size: 0.85rem;">Enter your Safaricom M-Pesa registered phone number</small>
+        </div>
+        <p style="color: #666; font-size: 0.95rem; margin-bottom: 1rem;">Click the button below to initiate M-Pesa payment:</p>
+        <button type="submit" class="btn" style="background: #2e7d32; width: 100%; color: white; padding: 0.75rem; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer;">Pay with M-Pesa</button>
+      </form>
+
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="{% url 'suppliers:product_list' %}" class="btn secondary" style="background: #f4f6f8; color: #0d6efd; border: 1px solid #ddd; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none;">Browse More Products</a>
+        <a href="{% url 'accounts:dashboard' %}" class="btn secondary" style="background: #f4f6f8; color: #0d6efd; border: 1px solid #ddd; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none;">Go to Dashboard</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

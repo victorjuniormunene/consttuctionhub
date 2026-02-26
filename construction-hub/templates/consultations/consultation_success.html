@@ -1,0 +1,237 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  .receipt-container {
+    max-width: 700px;
+    margin: 2rem auto;
+  }
+  .receipt-header {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 12px 12px 0 0;
+    text-align: center;
+    margin-bottom: 0;
+  }
+  .receipt-header h1 {
+    font-size: 1.8rem;
+    margin: 0 0 0.5rem 0;
+  }
+  .receipt-header p {
+    margin: 0;
+    opacity: 0.95;
+  }
+  .receipt-body {
+    background: white;
+    border: 1px solid #ddd;
+    border-top: none;
+    padding: 2rem;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+  .receipt-section {
+    margin-bottom: 2rem;
+  }
+  .receipt-section h3 {
+    font-size: 1.1rem;
+    color: #333;
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #f0f0f0;
+  }
+  .receipt-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .receipt-row:last-child {
+    border-bottom: none;
+  }
+  .receipt-label {
+    color: #666;
+    font-weight: 500;
+  }
+  .receipt-value {
+    color: #333;
+    text-align: right;
+    font-weight: 600;
+  }
+  .booking-id {
+    background: #f9f9f9;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    border: 2px dashed #667eea;
+  }
+  .booking-id .label {
+    font-size: 0.9rem;
+    color: #666;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .booking-id .number {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #667eea;
+    font-family: monospace;
+  }
+  .status-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: #fff3cd;
+    color: #856404;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+  .status-badge.completed {
+    background: #d4edda;
+    color: #155724;
+  }
+  .consultant-card {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+  }
+  .action-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  .btn-primary {
+    flex: 1;
+    padding: 0.75rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+  }
+  .btn-secondary {
+    flex: 1;
+    padding: 0.75rem;
+    background: #f0f0f0;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+  .btn-secondary:hover {
+    background: #e0e0e0;
+  }
+  .alert-info {
+    background: #d1ecf1;
+    border: 1px solid #bee5eb;
+    color: #0c5460;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+  }
+</style>
+
+<div class="container receipt-container">
+  <div class="receipt-header">
+    <h1>✓ Booking Confirmed!</h1>
+    <p>Your consultation has been successfully booked</p>
+  </div>
+
+  <div class="receipt-body">
+    <!-- Booking ID -->
+    <div class="booking-id">
+      <span class="label">Booking Reference Number</span>
+      <span class="number">#{{ consultation.id }}</span>
+    </div>
+
+    <!-- Status Badge -->
+    <div style="margin-bottom: 1.5rem;">
+      <span class="status-badge {% if consultation.status == 'completed' %}completed{% endif %}">
+        {% if consultation.status == 'pending' %}⏱️ Pending
+        {% elif consultation.status == 'scheduled' %}📅 Scheduled
+        {% elif consultation.status == 'completed' %}✓ Completed
+        {% else %}⚠️ {{ consultation.get_status_display }}{% endif %}
+      </span>
+    </div>
+
+    <!-- Booking Details -->
+    <div class="receipt-section">
+      <h3>Booking Details</h3>
+      <div class="receipt-row">
+        <span class="receipt-label">Booking Date</span>
+        <span class="receipt-value">{{ consultation.date_requested|date:'M d, Y H:i' }}</span>
+      </div>
+      <div class="receipt-row">
+        <span class="receipt-label">Status</span>
+        <span class="receipt-value">{{ consultation.get_status_display }}</span>
+      </div>
+    </div>
+
+    <!-- Consultant Information -->
+    <div class="receipt-section">
+      <h3>Consultant Information</h3>
+      <div class="consultant-card">
+        <div class="receipt-row">
+          <span class="receipt-label">Name</span>
+          <span class="receipt-value">{{ consultation.consultant_name }}</span>
+        </div>
+        <div class="receipt-row">
+          <span class="receipt-label">Phone</span>
+          <span class="receipt-value">{{ consultation.consultant_phone }}</span>
+        </div>
+        <div class="receipt-row">
+          <span class="receipt-label">Specialization</span>
+          <span class="receipt-value">{{ consultation.specialization|default:"General" }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pricing -->
+    <div class="receipt-section">
+      <h3>Pricing</h3>
+      <div class="receipt-row" style="border-bottom: 2px solid #667eea; padding-bottom: 1rem;">
+        <span class="receipt-label" style="font-size: 1.1rem;">Consultation Rate</span>
+        <span class="receipt-value" style="font-size: 1.3rem; color: #667eea;">KSH {{ consultation.consultation_rate }}</span>
+      </div>
+    </div>
+
+    <!-- Additional Details -->
+    {% if consultation.details %}
+    <div class="receipt-section">
+      <h3>Your Details</h3>
+      <p style="color: #666; line-height: 1.6; margin: 0;">{{ consultation.details }}</p>
+    </div>
+    {% endif %}
+
+    <!-- Information Alert -->
+    <div class="alert-info">
+      <strong>📌 What's Next?</strong><br>
+      The consultant will review your booking and contact you at your registered phone number. Please ensure your phone number is up to date in your account profile.
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <a href="{% url 'consultations:download_consultation_receipt' consultation.id %}" class="btn-primary">
+        📥 Download Receipt
+      </a>
+      <a href="{% url 'accounts:dashboard' %}" class="btn-secondary">
+        ← Back to Dashboard
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

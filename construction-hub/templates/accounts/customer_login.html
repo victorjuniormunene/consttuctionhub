@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Customer Login - Construction Hub{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 500px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+  <h2 style="text-align: center; margin-bottom: 1.5rem; color: #333;">Customer Login</h2>
+  
+  {% if messages %}
+    {% for message in messages %}
+      <div style="padding: 0.75rem; margin-bottom: 1rem; border-radius: 6px; background-color: {% if message.tags == 'error' %}#f8d7da{% else %}#d1ecf1{% endif %}; color: {% if message.tags == 'error' %}#721c24{% else %}#0c5460{% endif %}; border: 1px solid {% if message.tags == 'error' %}#f5c6cb{% else %}#bee5eb{% endif %};">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <p style="text-align: center; color: #666; margin-bottom: 1.5rem;">
+    Please use the unified login page to sign in. You'll be redirected to your customer dashboard after login.
+  </p>
+
+  <div style="text-align: center;">
+    <a href="{% url 'accounts:login' %}" style="display: inline-block; padding: 0.75rem 1.5rem; background: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: 600; margin-bottom: 1rem;">
+      Go to Login Page
+    </a>
+  </div>
+
+  <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e0e0e0;">
+    <p style="color: #666; margin-bottom: 0.5rem;">Are you a supplier or consultant?</p>
+    <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+      <a href="{% url 'accounts:supplier_login' %}" style="color: #28a745; text-decoration: none; font-weight: 600;">Supplier Login</a>
+      <a href="{% url 'accounts:consultant_login' %}" style="color: #ffc107; text-decoration: none; font-weight: 600;">Consultant Login</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

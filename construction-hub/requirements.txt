@@ -1,0 +1,15 @@
+Django==4.2
+djangorestframework==3.14.0
+django-cors-headers==3.14.0
+python-decouple==3.5
+Pillow==10.4.0
+django-filter==23.2.0
+django-extensions==3.2.1
+djangorestframework-simplejwt==5.2.2
+reportlab==4.0.7
+matplotlib==3.7.2
+django-allauth==0.63.3
+PyJWT==2.8.0
+cryptography==42.0.5
+africastalking==1.2.0
+requests>=2.26.0

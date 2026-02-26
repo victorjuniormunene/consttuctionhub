@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Order Confirmation - Construction Hub{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 3rem; margin-bottom: 3rem;">
+  <div style="max-width: 700px; margin: 0 auto;">
+    <div class="form-card" style="border-top: 4px solid #2e7d32; text-align: center;">
+      <div style="font-size: 3rem; margin-bottom: 1rem;">✓</div>
+      <h1 style="font-size: 1.8rem; color: #2e7d32; margin-bottom: 0.5rem;">Order Placed Successfully!</h1>
+      <p style="color: #666; margin-bottom: 1.5rem;">Thank you for your order. Your details have been recorded.</p>
+      
+      <div style="background: #f4f6f8; padding: 1.5rem; border-radius: 12px; text-align: left; margin-bottom: 1.5rem;">
+        <p style="margin: 0.5rem 0;"><strong>Order Number:</strong> {{ order.order_number }}</p>
+        <p style="margin: 0.5rem 0;"><strong>Product:</strong> {{ order.product.name }}</p>
+        <p style="margin: 0.5rem 0;"><strong>Quantity:</strong> {{ order.quantity }} units</p>
+        <p style="margin: 0.5rem 0;"><strong>Price per unit:</strong> KSH {{ order.price }}</p>
+        <p style="margin: 0.5rem 0; font-weight: 800; color: #ff7f31; font-size: 1.1rem;"><strong>Total Cost:</strong> KSH {{ order.total_cost|floatformat:2 }}</p>
+        <hr style="border: none; border-top: 1px solid #ddd; margin: 1rem 0;">
+        <p style="margin: 0.5rem 0;"><strong>Customer Name:</strong> {{ order.customer_name }}</p>
+        <p style="margin: 0.5rem 0;"><strong>Phone:</strong> {{ order.customer_number }}</p>
+        <p style="margin: 0.5rem 0;"><strong>Location:</strong> {{ order.customer_location }}</p>
+        <hr style="border: none; border-top: 1px solid #ddd; margin: 1rem 0;">
+        <p style="margin: 0.5rem 0;"><strong>Supplier:</strong> {{ order.product.supplier.company_name }}</p>
+        <p style="margin: 0.5rem 0;"><strong>Status:</strong> <span style="background: #fff3cd; color: #856404; padding: 0.25rem 0.5rem; border-radius: 6px;">{{ order.get_status_display }}</span></p>
+      </div>
+
+      {% if order.status != 'paid' %}
+        <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+          <h3 style="margin: 0 0 1rem 0; color: #856404;">Payment Required</h3>
+          <p style="margin: 0.5rem 0;"><strong>Payment Method:</strong> Safaricom M-Pesa</p>
+          <p style="margin: 0.5rem 0;"><strong>Pay to Number:</strong> <span style="font-size: 1.2rem; font-weight: bold; color: #2e7d32;">{{ payment_number }}</span></p>
+          <p style="margin: 0.5rem 0;"><strong>Amount:</strong> KSH {{ order.total_cost|floatformat:2 }}</p>
+          <p style="margin: 0.5rem 0; font-size: 0.9rem; color: #666;">Send the exact amount to the number above. Include your order number {{ order.order_number }} in the payment reference.</p>
+        </div>
+
+        <form method="post" style="margin-bottom: 1.5rem;">
+          {% csrf_token %}
+          <p style="color: #666; font-size: 0.95rem; margin-bottom: 1rem;">After making the payment, click the button below to confirm:</p>
+          <button type="submit" class="btn" style="background: #2e7d32; width: 100%; color: white; padding: 0.75rem; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer;">I Have Made the Payment</button>
+        </form>
+      {% else %}
+        <p style="color: #666; font-size: 0.95rem; margin-bottom: 1.5rem;">The supplier has been notified of your order and will contact you shortly at the provided phone number.</p>
+      {% endif %}
+
+      {% if order.status == 'paid' %}
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem;">
+          <a href="{% url 'orders:download_receipt' order.id %}" class="btn" style="background: #28a745; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; text-decoration: none;">📥 Download Receipt</a>
+        </div>
+      {% endif %}
+
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="{% url 'suppliers:product_list' %}" class="btn" style="background: #0d6efd; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; text-decoration: none;">Browse More Products</a>
+        <a href="{% url 'accounts:dashboard' %}" class="btn secondary" style="background: #f4f6f8; color: #0d6efd; border: 1px solid #ddd; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none;">Go to Dashboard</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container">
+  <div class="dashboard-section">
+    <!-- Breadcrumb -->
+    <div style="margin-bottom: 2rem;">
+      <a href="{% url 'products:product_list' %}" style="color: var(--text-light); text-decoration: none;">← Back to Products</a>
+    </div>
+
+    <!-- Product Details -->
+    <div class="dashboard-card" style="margin-bottom: 2rem;">
+      <h3 style="color: var(--text); margin-bottom: 1rem;">{{ product.name }}</h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+        <div>
+          {% if product.image_url %}
+            <img src="{% static product.image_url %}" alt="{{ product.name }}" style="width: 100%; max-width: 400px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+          {% else %}
+            <div style="width: 100%; max-width: 400px; height: 300px; background: linear-gradient(135deg, #ff7f31, #ff6b35); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 4rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">📦</div>
+          {% endif %}
+        </div>
+        <div>
+          <p style="color: var(--text-light); margin-bottom: 1rem;">{{ product.description }}</p>
+          <div style="margin-bottom: 1rem;">
+            <strong style="color: var(--text);">Supplier:</strong> {{ product.supplier.company_name }}<br>
+            <strong style="color: var(--text);">Location:</strong> {{ product.supplier.location|default:"N/A" }}<br>
+            <strong style="color: var(--text);">Category:</strong> {{ product.get_category_display }}<br>
+            <strong style="color: var(--text);">Price:</strong> <span style="color: #ff7f31; font-size: 1.5rem; font-weight: 700;">KSH {{ product.cost }}</span> per unit
+            {% if product.offer %}
+            <br>
+            <div style="margin-top: 0.5rem; padding: 0.75rem; background: linear-gradient(135deg, #fff3cd, #ffeeba); border: 2px solid #ffc107; border-radius: 8px; display: inline-block;">
+              <strong style="color: #856404;">🏷️ Special Offer:</strong> 
+              {% if product.offer == 'free_delivery' %}
+                <span style="color: #28a745; font-weight: 700;">🚚 Free Delivery</span>
+              {% elif product.offer == '10_percent_discount' %}
+                <span style="color: #dc3545; font-weight: 700;">🔥 10% Discount</span>
+              {% else %}
+                <span style="color: #856404; font-weight: 700;">{{ product.get_offer_display }}</span>
+              {% endif %}
+            </div>
+            {% endif %}
+          </div>
+          {% if user.is_authenticated and user.user_type == 'customer' %}
+            <form method="post" action="{% url 'products:product_detail' product.id %}" style="display: inline;">
+              {% csrf_token %}
+              <div style="display: flex; gap: 1rem; align-items: center;">
+                <div>
+                  <label style="display: block; margin-bottom: 0.25rem; font-weight: 600;">Quantity:</label>
+                  <input type="number" name="quantity" min="1" value="1" style="width: 80px; padding: 0.5rem; border: 2px solid #e9ecef; border-radius: 8px; font-size: 1rem;">
+                </div>
+                <button type="submit" name="add_to_cart" style="background: linear-gradient(135deg, #ff7f31, #ff9a5e); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer;">Add to Cart</button>
+              </div>
+            </form>
+            <div style="margin-top: 1rem;">
+              <a href="{% url 'products:cart' %}" style="color: #ff7f31; text-decoration: none; font-weight: 600;">View Cart</a>
+            </div>
+          {% elif user.is_authenticated %}
+            <p style="color: #6c757d; font-style: italic;">Cart functionality is only available for customers.</p>
+          {% else %}
+            <a class="btn-secondary" href="{% url 'accounts:login' %}?next={% url 'products:product_detail' product.id %}" style="background: #6c757d; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; display: inline-block;">Login as Customer to Order</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- All Orders for this Product -->
+    <div class="dashboard-card">
+      <h3 style="color: var(--text); margin-bottom: 1rem;">All Orders for this Product</h3>
+      {% if orders %}
+        <div style="display: grid; gap: 1rem;">
+          {% for order in orders %}
+            <div style="padding: 1rem; background: var(--background-light); border-radius: 8px; border-left: 4px solid {% if order.ordering_supplier %}#28a745{% else %}#ff7f31{% endif %};">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  {% if order.ordering_supplier %}
+                    <!-- Supplier-created order -->
+                    <strong style="color: var(--text);">Supplier Order</strong>
+                    <span style="color: #28a745; font-size: 0.8rem; margin-left: 0.5rem;">(Created by {{ order.ordering_supplier.username }})</span>
+                  {% else %}
+                    <!-- Customer-created order -->
+                    <strong style="color: var(--text);">{{ order.customer_name }}</strong>
+                  {% endif %}
+                  <span style="color: var(--text-light); margin-left: 1rem;">{{ order.quantity }} units</span>
+                  <span style="color: var(--text-light); margin-left: 1rem;">Status: {{ order.get_status_display }}</span>
+                  {% if order.price %}
+                    <span style="color: var(--text-light); margin-left: 1rem;">@ KSH {{ order.price }} each</span>
+                  {% endif %}
+                </div>
+                <div style="text-align: right;">
+                  <div style="color: {% if order.ordering_supplier %}#28a745{% else %}#ff7f31{% endif %}; font-weight: 600;">KSH {{ order.total_cost }}</div>
+                  <div style="color: var(--text-light); font-size: 0.8rem;">{{ order.created_at|date:'M d, Y H:i' }}</div>
+                  {% if order.order_image %}
+                    <div style="margin-top: 0.5rem;">
+                      <img src="{{ order.order_image.url }}" alt="Order image" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid #dee2e6;">
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p style="color: var(--text-light); margin: 0;">No orders yet for this product.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

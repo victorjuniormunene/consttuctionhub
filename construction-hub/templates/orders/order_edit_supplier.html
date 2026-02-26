@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Order - {{ order.product.name }}{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 2rem auto; padding: 0 1rem;">
+  <div style="margin-bottom: 2rem;">
+    <a href="{% url 'accounts:dashboard' %}" style="color: #0d6efd; text-decoration: none; font-size: 0.95rem;">← Back to Dashboard</a>
+  </div>
+
+  <div class="form-card">
+    <h1 style="margin-top: 0; margin-bottom: 1.5rem; font-size: 1.8rem; text-align: center;">Edit Order #{{ order.order_number }}</h1>
+    
+    <div style="background: #f4f6f8; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+      <h3 style="margin-top: 0;">Order Details</h3>
+      <p style="margin: 0.5rem 0;"><strong>Product:</strong> {{ order.product.name }}</p>
+      <p style="margin: 0.5rem 0;"><strong>Status:</strong> {{ order.get_status_display }}</p>
+      <p style="margin: 0.5rem 0;"><strong>Created:</strong> {{ order.created_at|date:'M d, Y H:i' }}</p>
+      <hr style="border: none; border-top: 1px solid #ddd; margin: 0.75rem 0;">
+      <p style="margin: 0.5rem 0; font-weight: 600; color: #ff7f31;"><strong>Current Total:</strong> KSH {{ order.total_cost }}</p>
+    </div>
+
+    <form method="post" style="background: white;">
+      {% csrf_token %}
+      
+      <div style="margin-bottom: 1.5rem;">
+        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Product</label>
+        <input type="text" value="{{ order.product.name }}" disabled style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; background: #f4f6f8; color: #666; box-sizing: border-box;">
+        <small style="color: #999; display: block; margin-top: 0.25rem;">Product cannot be changed</small>
+      </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <label for="id_quantity" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Quantity *</label>
+        {{ form.quantity }}
+        {% if form.quantity.errors %}
+          <div style="color: #dc3545; font-size: 0.9rem; margin-top: 0.25rem;">{{ form.quantity.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <label for="id_price" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Price per Unit (KSH) *</label>
+        {{ form.price }}
+        {% if form.price.errors %}
+          <div style="color: #dc3545; font-size: 0.9rem; margin-top: 0.25rem;">{{ form.price.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <label for="id_customer_name" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Customer Name *</label>
+        {{ form.customer_name }}
+        {% if form.customer_name.errors %}
+          <div style="color: #dc3545; font-size: 0.9rem; margin-top: 0.25rem;">{{ form.customer_name.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <label for="id_customer_number" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Customer Phone Number *</label>
+        {{ form.customer_number }}
+        {% if form.customer_number.errors %}
+          <div style="color: #dc3545; font-size: 0.9rem; margin-top: 0.25rem;">{{ form.customer_number.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <label for="id_customer_location" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Customer Location *</label>
+        {{ form.customer_location }}
+        {% if form.customer_location.errors %}
+          <div style="color: #dc3545; font-size: 0.9rem; margin-top: 0.25rem;">{{ form.customer_location.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <label for="id_status" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Order Status *</label>
+        {{ form.status }}
+        {% if form.status.errors %}
+          <div style="color: #dc3545; font-size: 0.9rem; margin-top: 0.25rem;">{{ form.status.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      {% if form.non_field_errors %}
+        <div style="background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; padding: 0.75rem; border-radius: 6px; margin-bottom: 1.5rem;">
+          {% for error in form.non_field_errors %}
+            <p style="margin: 0.25rem 0;">{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if messages %}
+        {% for message in messages %}
+          <div style="background: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 0.75rem; border-radius: 6px; margin-bottom: 1.5rem;">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+        <button type="submit" class="btn" style="flex: 1; background: #28a745; font-size: 1rem; padding: 0.75rem; border: none; border-radius: 6px; color: white; font-weight: 600; cursor: pointer;">Save Changes</button>
+        <a href="{% url 'accounts:dashboard' %}" class="btn" style="flex: 1; text-align: center; background: #6c757d; color: white; text-decoration: none; font-size: 1rem; padding: 0.75rem; border-radius: 6px; font-weight: 600;">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  input[type="text"],
+  input[type="email"],
+  input[type="number"],
+  input[type="tel"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: inherit;
+    box-sizing: border-box;
+  }
+
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="number"]:focus,
+  input[type="tel"]:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
+  }
+
+  .form-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 2rem;
+  }
+</style>
+{% endblock %}

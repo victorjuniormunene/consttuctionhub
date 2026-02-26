@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container">
+  <div class="dashboard-section">
+    <h2 style="color: var(--text); margin-bottom: 2rem;">Checkout</h2>
+
+    {% if cart_items %}
+      <div class="dashboard-card" style="margin-bottom: 2rem;">
+        <h3 style="color: var(--text); margin-bottom: 1rem;">Order Summary</h3>
+        <div style="display: grid; gap: 1rem;">
+          {% for item in cart_items %}
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--background-light); border-radius: 8px;">
+              <div>
+                <h4 style="color: var(--text); margin: 0 0 0.5rem 0;">{{ item.product.name }}</h4>
+                <p style="color: var(--text-light); margin: 0;">Supplier: {{ item.product.supplier.company_name }}</p>
+                <p style="color: var(--text-light); margin: 0;">Quantity: {{ item.quantity }}</p>
+                <p style="color: var(--text-light); margin: 0;">Price per unit: KSH {{ item.product.cost }}</p>
+              </div>
+              <div style="text-align: right;">
+                <div style="color: #ff7f31; font-weight: 600; font-size: 1.2rem;">KSH {{ item.total_cost }}</div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #dee2e6;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <strong style="color: var(--text); font-size: 1.5rem;">Total: KSH {{ total_cost }}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-card">
+        <h3 style="color: var(--text); margin-bottom: 1rem;">Customer Information</h3>
+        <form method="post">
+          {% csrf_token %}
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div>
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Your Name:</label>
+              <input type="text" name="customer_name" required style="width: 100%; padding: 0.75rem; border: 2px solid #e9ecef; border-radius: 8px; font-size: 1rem;">
+            </div>
+            <div>
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Phone Number:</label>
+              <input type="text" name="customer_number" required style="width: 100%; padding: 0.75rem; border: 2px solid #e9ecef; border-radius: 8px; font-size: 1rem;">
+            </div>
+          </div>
+          <div style="margin-top: 1rem;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Location/Address:</label>
+            <input type="text" name="customer_location" required style="width: 100%; padding: 0.75rem; border: 2px solid #e9ecef; border-radius: 8px; font-size: 1rem;">
+          </div>
+
+          <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+            <button type="submit" style="flex: 1; background: linear-gradient(135deg, #ff7f31, #ff9a5e); color: white; border: none; padding: 1rem; border-radius: 8px; font-weight: 600; cursor: pointer;">Place Order & Pay</button>
+            <a href="{% url 'products:cart' %}" style="flex: 1; background: #6c757d; color: white; padding: 1rem; border-radius: 8px; text-decoration: none; text-align: center; font-weight: 600;">Back to Cart</a>
+          </div>
+        </form>
+      </div>
+    {% else %}
+      <div class="dashboard-card">
+        <p style="color: var(--text-light); text-align: center; margin: 2rem 0;">Your cart is empty.</p>
+        <div style="text-align: center;">
+          <a href="{% url 'products:product_list' %}" style="background: #6c757d; color: white; padding: 1rem 2rem; border-radius: 8px; text-decoration: none;">Continue Shopping</a>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

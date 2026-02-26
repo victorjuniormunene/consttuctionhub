@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-40px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes slideInRight {
+    from { opacity: 0; transform: translateX(40px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+  }
+
+  .contact-header {
+    animation: fadeInUp 0.8s ease-out;
+    background: linear-gradient(135deg, #ff7f31 0%, #ff9a5e 100%);
+    color: white;
+    padding: 3rem 1rem;
+    border-radius: 16px;
+    margin-bottom: 3rem;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(255, 127, 49, 0.2);
+  }
+
+  .contact-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .contact-header p {
+    font-size: 1.1rem;
+    opacity: 0.95;
+  }
+
+  .contact-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .contact-form-card {
+    animation: slideInLeft 0.8s ease-out;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: none;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    padding: 2rem;
+  }
+
+  .contact-info-card {
+    animation: slideInRight 0.8s ease-out;
+    background: white;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    border-radius: 12px;
+    padding: 2rem;
+  }
+
+  .info-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  .info-item:nth-child(1) { animation-delay: 0.2s; }
+  .info-item:nth-child(2) { animation-delay: 0.4s; }
+  .info-item:nth-child(3) { animation-delay: 0.6s; }
+
+  .info-icon {
+    font-size: 2rem;
+    margin-right: 1rem;
+    color: #ff7f31;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .info-item:nth-child(2) .info-icon { animation-delay: 0.2s; }
+  .info-item:nth-child(3) .info-icon { animation-delay: 0.4s; }
+
+  .info-content h3 {
+    margin: 0 0 0.25rem 0;
+    color: #333;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .info-content p {
+    margin: 0;
+    color: #666;
+    font-size: 0.95rem;
+  }
+
+  .info-content a {
+    color: #ff7f31;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .info-content a:hover {
+    text-decoration: underline;
+  }
+
+  input, textarea, select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+  }
+
+  input:focus, textarea:focus {
+    outline: none;
+    border-color: #ff7f31;
+    box-shadow: 0 0 0 2px rgba(255, 127, 49, 0.1);
+  }
+
+  .submit-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #ff7f31 0%, #ff9a5e 100%);
+    color: white;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 127, 49, 0.3);
+  }
+
+  .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 127, 49, 0.4);
+  }
+
+  @media (max-width: 768px) {
+    .contact-content {
+      grid-template-columns: 1fr;
+    }
+    .contact-header h1 {
+      font-size: 2rem;
+    }
+  }
+</style>
+
+<div class="container">
+  <div class="contact-header">
+    <h1>Get in Touch</h1>
+    <p>We're here to help! Send us a message and we'll respond as quickly as possible.</p>
+  </div>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div style="padding: 1rem; margin-bottom: 1rem; border-radius: 8px; {% if message.tags %}background: {% if 'success' in message.tags %}#d4edda; color: #155724;{% elif 'error' in message.tags %}#f8d7da; color: #721c24;{% else %}#d1ecf1; color: #0c5460;{% endif %}{% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  {% if submitted %}
+    <div style="text-align: center; padding: 3rem; background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); border-radius: 12px; margin-bottom: 2rem; animation: fadeInUp 0.8s ease-out;">
+      <h2 style="color: #155724; margin-bottom: 0.5rem; font-size: 1.8rem;">✓ Message Sent Successfully!</h2>
+      <p style="color: #155724; font-size: 1rem;">Thank you for contacting us. We'll get back to you as soon as possible.</p>
+      <a href="/" style="display: inline-block; margin-top: 1rem; padding: 0.75rem 1.5rem; background: #28a745; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">Return to Home</a>
+    </div>
+  {% else %}
+    <div class="contact-content">
+      <!-- Contact Form -->
+      <div class="contact-form-card">
+        <h2 style="color: #333; margin-bottom: 1.5rem; animation: fadeInUp 0.8s ease-out;">Send us a Message</h2>
+        <form method="post">
+          {% csrf_token %}
+          <div style="margin-bottom: 1rem; animation: fadeInUp 0.8s ease-out 0.1s backwards;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">Your Name</label>
+            <input type="text" name="name" required placeholder="John Doe">
+          </div>
+          <div style="margin-bottom: 1rem; animation: fadeInUp 0.8s ease-out 0.2s backwards;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">Email Address</label>
+            <input type="email" name="email" required placeholder="your.email@example.com">
+          </div>
+          <div style="margin-bottom: 1rem; animation: fadeInUp 0.8s ease-out 0.3s backwards;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">Subject</label>
+            <input type="text" name="subject" required placeholder="How can we help?">
+          </div>
+          <div style="margin-bottom: 1.5rem; animation: fadeInUp 0.8s ease-out 0.4s backwards;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">Message</label>
+            <textarea name="message" rows="6" required placeholder="Tell us more about your inquiry..."></textarea>
+          </div>
+          <button type="submit" class="submit-btn" style="animation: fadeInUp 0.8s ease-out 0.5s backwards;">Send Message</button>
+        </form>
+      </div>
+
+      <!-- Contact Information -->
+      <div class="contact-info-card">
+        <h2 style="color: #333; margin-bottom: 2rem; animation: fadeInUp 0.8s ease-out;">Contact Information</h2>
+        
+        <div class="info-item">
+          <div class="info-icon">📞</div>
+          <div class="info-content">
+            <h3>Phone</h3>
+            <p><a href="tel:+254112731468">0112731468</a></p>
+            <p style="font-size: 0.85rem; color: #999; margin-top: 0.25rem;">Available 9am - 5pm EAT</p>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-icon">✉️</div>
+          <div class="info-content">
+            <h3>Email</h3>
+            <p><a href="mailto:victorjuniormunene@gmail.com">victorjuniormunene@gmail.com</a></p>
+            <p style="font-size: 0.85rem; color: #999; margin-top: 0.25rem;">We respond within 24 hours</p>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-icon">📍</div>
+          <div class="info-content">
+            <h3>Location</h3>
+            <p>Nairobi, Kenya</p>
+            <p style="font-size: 0.85rem; color: #999; margin-top: 0.25rem;">East Africa Hub</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <div style="text-align: center; padding: 2rem; margin-top: 3rem;">
+    <p style="color: #666; margin-bottom: 1rem;">Ready to work with us?</p>
+    <a href="{% url 'accounts:consultant_application' %}" class="btn" style="background: linear-gradient(135deg, #ff7f31 0%, #ff9a5e 100%); color: white; padding: 0.75rem 2rem; text-decoration: none; border-radius: 8px; font-size: 1rem; font-weight: 600; display: inline-block; box-shadow: 0 4px 15px rgba(255, 127, 49, 0.3); transition: all 0.3s ease;">Apply as Consultant</a>
+  </div>
+</div>
+{% endblock %}

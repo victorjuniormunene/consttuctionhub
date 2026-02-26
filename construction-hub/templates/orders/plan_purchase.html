@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .confirm-card {
+    animation: fadeInUp 0.6s ease-out;
+  }
+</style>
+
+<div class="container" style="padding: 3rem 1rem;">
+  <div class="confirm-card" style="max-width: 600px; margin: 0 auto; background: white; border-radius: 16px; padding: 2.5rem; box-shadow: 0 8px 32px rgba(0,0,0,0.1);">
+    
+    <!-- Header -->
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #ff7f31, #ff9a5e); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+        <span style="font-size: 2.5rem;">🏠</span>
+      </div>
+      <h1 style="font-size: 1.8rem; color: #1a1a2e; margin-bottom: 0.5rem; font-weight: 700;">Confirm Your Plan Purchase</h1>
+      <p style="color: #666; font-size: 1rem;">Review your order details below</p>
+    </div>
+
+    <!-- Plan Details -->
+    <div style="background: #f8f9fa; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #e0e0e0;">
+        <span style="color: #666; font-weight: 500;">Plan Type</span>
+        <span style="color: #1a1a2e; font-weight: 600; font-size: 1.1rem;">{{ plan_name }}</span>
+      </div>
+      
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #e0e0e0;">
+        <span style="color: #666; font-weight: 500;">Price</span>
+        <span style="color: #ff7f31; font-weight: 700; font-size: 1.5rem;">KSH {{ plan_price|floatformat:0 }}</span>
+      </div>
+      
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="color: #666; font-weight: 500;">Customer</span>
+        <span style="color: #1a1a2e; font-weight: 500;">{{ user.get_full_name|default:user.username }}</span>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div style="margin-bottom: 2rem;">
+      <h3 style="color: #1a1a2e; margin-bottom: 1rem; font-size: 1.1rem;">What's Included:</h3>
+      <ul style="list-style: none; padding: 0; margin: 0;">
+        <li style="padding: 0.5rem 0; color: #555;">
+          <span style="color: #28a745; font-weight: 700; margin-right: 0.5rem;">✓</span> Detailed floor plans
+        </li>
+        <li style="padding: 0.5rem 0; color: #555;">
+          <span style="color: #28a745; font-weight: 700; margin-right: 0.5rem;">✓</span> Elevation drawings
+        </li>
+        <li style="padding: 0.5rem 0; color: #555;">
+          <span style="color: #28a745; font-weight: 700; margin-right: 0.5rem;">✓</span> Section details
+        </li>
+        <li style="padding: 0.5rem 0; color: #555;">
+          <span style="color: #28a745; font-weight: 700; margin-right: 0.5rem;">✓</span> Material specifications
+        </li>
+        <li style="padding: 0.5rem 0; color: #555;">
+          <span style="color: #28a745; font-weight: 700; margin-right: 0.5rem;">✓</span> Construction guidelines
+        </li>
+        <li style="padding: 0.5rem 0; color: #555;">
+          <span style="color: #28a745; font-weight: 700; margin-right: 0.5rem;">✓</span> Digital format delivery
+        </li>
+      </ul>
+    </div>
+
+    <!-- Payment Info -->
+    <div style="background: #fff3e0; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; border-left: 4px solid #ff7f31;">
+      <h4 style="color: #1a1a2e; margin-bottom: 0.5rem; font-size: 1rem;">💳 Payment Method</h4>
+      <p style="color: #666; font-size: 0.9rem; margin: 0;">Payments are processed securely via M-Pesa. After clicking "Proceed to Payment", you'll receive an STK push on your phone to complete the transaction.</p>
+    </div>
+
+    <!-- Form -->
+    <form method="post" action="{% url 'orders:plan_purchase' plan_type %}">
+      {% csrf_token %}
+      
+      <button type="submit" style="width: 100%; padding: 1rem; background: linear-gradient(135deg, #ff7f31, #ff9a5e); color: white; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(255, 127, 49, 0.4);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(255, 127, 49, 0.5)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(255, 127, 49, 0.4)';">
+        Proceed to Payment
+      </button>
+    </form>
+
+    <!-- Back Link -->
+    <div style="text-align: center; margin-top: 1.5rem;">
+      <a href="{% url 'accounts:pricing' %}" style="color: #666; text-decoration: none; font-size: 0.9rem;">
+        ← Back to Pricing
+      </a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

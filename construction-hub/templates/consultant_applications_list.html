@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container" style="margin-top: 2rem; margin-bottom: 2rem;">
+  <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">My Consultant Applications</h1>
+  <p style="color: #666; margin-bottom: 2rem;">Track your consultant applications and download receipts.</p>
+
+  {% if applications %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem;">
+      {% for app in applications %}
+        <div class="form-card" style="border-left: 4px solid #ff7f31;">
+          <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+            <div>
+              <h3 style="margin: 0; font-size: 1.1rem;">{{ app.full_name }}</h3>
+              <p style="margin: 0.25rem 0; color: #666; font-size: 0.95rem;">{{ app.specialization }}</p>
+            </div>
+            <span style="background: {% if app.approved_at %}#d4edda{% elif app.processed %}#fff3cd{% else %}#d1ecf1{% endif %}; color: {% if app.approved_at %}#155724{% elif app.processed %}#856404{% else %}#0c5460{% endif %}; padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">
+              {% if app.approved_at %}✅ Approved{% elif app.processed %}⏳ Reviewed{% else %}⏳ Pending{% endif %}
+            </span>
+          </div>
+          
+          <div style="background: #f4f6f8; padding: 0.75rem; border-radius: 8px; margin-bottom: 1rem;">
+            <p style="margin: 0.25rem 0;"><strong>Phone:</strong> {{ app.phone }}</p>
+            <p style="margin: 0.25rem 0;"><strong>Email:</strong> {{ app.email }}</p>
+            <p style="margin: 0.25rem 0;"><strong>Experience:</strong> {{ app.experience_years }} years</p>
+            <hr style="border: none; border-top: 1px solid #ddd; margin: 0.5rem 0;">
+            <p style="margin: 0.25rem 0; font-size: 0.9rem; color: #666;">Application ID: APP-{{ app.id|stringformat:'08d' }}</p>
+          </div>
+          
+          <p style="margin: 0.5rem 0; font-size: 0.9rem; color: #999;">Submitted: {{ app.submitted_at|date:'M d, Y at H:i' }}</p>
+          {% if app.approved_at %}
+            <p style="margin: 0.5rem 0; font-size: 0.9rem; color: #155724;"><strong>✅ Approved on:</strong> {{ app.approved_at|date:'M d, Y' }}</p>
+          {% endif %}
+          
+          <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+            <a href="{% url 'consultations:download_consultant_receipt' app.id %}" class="btn" style="background: #0d6efd; flex: 1; text-align: center; font-size: 0.9rem; padding: 0.5rem;">📥 Download Receipt</a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="form-card" style="text-align: center; padding: 2rem;">
+      <p style="color: #999; font-size: 1.05rem; margin: 0;">You haven't submitted any consultant applications yet.</p>
+      <a href="{% url 'accounts:consultant_application' %}" class="btn" style="margin-top: 1rem; background: #ff7f31;">Apply as Consultant</a>
+    </div>
+  {% endif %}
+
+  <div style="text-align: center; padding: 1.5rem; margin-top: 2rem;">
+    <a href="{% url 'dashboard' %}" class="btn" style="background: #6c757d;">Back to Dashboard</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container">
+  <div class="dashboard-section">
+    <h2 style="color: var(--text); margin-bottom: 2rem;">Your Cart</h2>
+
+    {% if cart_items %}
+      <div style="display: grid; gap: 1rem;">
+        {% for item in cart_items %}
+          <div style="padding: 1rem; background: var(--background-light); border-radius: 8px; border: 1px solid #dee2e6;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <h4 style="color: var(--text); margin: 0 0 0.5rem 0;">{{ item.product.name }}</h4>
+                <p style="color: var(--text-light); margin: 0 0 0.5rem 0;">Supplier: {{ item.product.supplier.company_name }}</p>
+                <p style="color: var(--text-light); margin: 0 0 0.5rem 0;">Location: {{ item.product.supplier.location|default:"N/A" }}</p>
+                <p style="color: var(--text-light); margin: 0;">Quantity: {{ item.quantity }} @ KSH {{ item.product.cost }} each</p>
+              </div>
+              <div style="text-align: right;">
+                <div style="color: #ff7f31; font-weight: 600; font-size: 1.2rem;">KSH {{ item.total_cost }}</div>
+                <form method="post" action="{% url 'products:remove_from_cart' item.id %}" style="margin-top: 0.5rem;">
+                  {% csrf_token %}
+                  <button type="submit" style="background: #dc3545; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">Remove</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div style="margin-top: 2rem; padding: 1rem; background: var(--background-light); border-radius: 8px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h3 style="color: var(--text); margin: 0;">Total: KSH {{ total_cost }}</h3>
+          <a href="{% url 'products:checkout' %}" style="background: linear-gradient(135deg, #ff7f31, #ff9a5e); color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600;">Proceed to Checkout</a>
+        </div>
+      </div>
+    {% else %}
+      <div style="text-align: center; padding: 3rem;">
+        <h3 style="color: var(--text-light); margin-bottom: 1rem;">Your cart is empty</h3>
+        <a href="{% url 'products:product_list' %}" style="background: linear-gradient(135deg, #ff7f31, #ff9a5e); color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600;">Browse Products</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

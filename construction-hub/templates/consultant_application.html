@@ -1,0 +1,532 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+  
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  
+  @keyframes checkmark {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  
+  .hero-section {
+    position: relative;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    padding: 3rem 2rem;
+    border-radius: 24px;
+    margin-bottom: 2.5rem;
+    overflow: hidden;
+    animation: fadeInUp 0.8s ease-out;
+  }
+  
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(circle at 20% 80%, rgba(255, 127, 49, 0.15) 0%, transparent 40%),
+      radial-gradient(circle at 80% 20%, rgba(255, 159, 67, 0.1) 0%, transparent 40%);
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .hero-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    animation: float 8s ease-in-out infinite reverse;
+  }
+  
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+  
+  .hero-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #ff7f31, #ff9a5e);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 2.5rem;
+    box-shadow: 0 10px 30px rgba(255, 127, 49, 0.3);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  
+  .hero-title {
+    font-size: 2.5rem;
+    color: white;
+    margin-bottom: 0.75rem;
+    font-weight: 800;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  }
+  
+  .hero-subtitle {
+    font-size: 1.15rem;
+    color: rgba(255,255,255,0.85);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  
+  .progress-steps {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  
+  .progress-step {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255,255,255,0.1);
+    border-radius: 30px;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.7);
+    backdrop-filter: blur(10px);
+  }
+  
+  .progress-step.active {
+    background: linear-gradient(135deg, #ff7f31, #ff9a5e);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 127, 49, 0.3);
+  }
+  
+  .progress-step.completed {
+    background: rgba(46, 213, 115, 0.2);
+    color: #2ed573;
+  }
+  
+  .form-card {
+    animation: fadeInUp 0.8s ease-out;
+    transition: all 0.3s ease;
+  }
+  
+  .form-card:hover {
+    box-shadow: 0 12px 40px rgba(255, 127, 49, 0.15);
+  }
+  
+  .form-section {
+    background: #f8f9fa;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #e9ecef;
+  }
+  
+  .form-section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .form-section-title::before {
+    content: '';
+    width: 4px;
+    height: 20px;
+    background: linear-gradient(135deg, #ff7f31, #ff9a5e);
+    border-radius: 2px;
+  }
+  
+  .input-group {
+    position: relative;
+    margin-bottom: 1.25rem;
+  }
+  
+  .input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    font-size: 1.1rem;
+    z-index: 1;
+  }
+  
+  input[type="text"], input[type="email"], input[type="number"], input[type="tel"], input[type="file"], textarea, select {
+    width: 100%;
+    padding: 1rem 1rem 1rem 2.75rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 1rem;
+    background: white;
+    transition: all 0.3s ease;
+  }
+  
+  textarea {
+    padding-left: 1rem;
+    min-height: 140px;
+    resize: vertical;
+  }
+
+  input[type="text"]:focus, input[type="email"]:focus, input[type="number"]:focus, input[type="tel"]:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: #ff7f31;
+    box-shadow: 0 0 0 4px rgba(255, 127, 49, 0.15);
+  }
+
+  input:focus + .input-icon, textarea:focus + .input-icon {
+    color: #ff7f31;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #1a1a2e;
+  }
+  
+  .file-upload {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    border: 2px dashed #e0e0e0;
+    border-radius: 12px;
+    background: #fafafa;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .file-upload:hover {
+    border-color: #ff7f31;
+    background: #fff7ed;
+  }
+  
+  .file-upload-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+    color: #6c757d;
+  }
+  
+  .file-upload-text {
+    color: #666;
+    font-size: 0.95rem;
+  }
+
+  .btn {
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  }
+  
+  .btn-primary {
+    background: linear-gradient(135deg, #ff7f31, #ff9a5e);
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255, 127, 49, 0.4);
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+  }
+  
+  .btn-primary:hover::before {
+    left: 100%;
+  }
+
+  .download-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: white;
+    padding: 0.875rem 1.75rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin-bottom: 1.5rem;
+  }
+
+  .download-link:hover {
+    background: linear-gradient(135deg, #ff7f31, #ff9a5e);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 127, 49, 0.3);
+  }
+
+  .success-animation {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 1.5rem;
+    background: linear-gradient(135deg, #2ed573, #20bf6b);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    box-shadow: 0 15px 40px rgba(46, 213, 115, 0.3);
+    animation: checkmark 0.6s ease-out;
+  }
+  
+  .benefit-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  
+  .benefit-card {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .benefit-card:hover {
+    background: rgba(255,255,255,0.15);
+    transform: translateY(-3px);
+  }
+  
+  .benefit-card-icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .benefit-card-title {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  
+  .benefit-card-text {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 768px) {
+    .hero-title { font-size: 1.8rem; }
+    .hero-subtitle { font-size: 1rem; }
+    .progress-steps { gap: 0.5rem; }
+    .progress-step { padding: 0.4rem 0.75rem; font-size: 0.75rem; }
+    .benefit-cards { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="container" style="padding: 2rem 1rem;">
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <div class="hero-content">
+      <div class="hero-icon">👔</div>
+      <h1 class="hero-title">Consultant Application</h1>
+      <p class="hero-subtitle">Join our elite network of construction experts. Share your expertise and help shape the future of the industry.</p>
+      
+      <!-- Progress Steps -->
+      <div class="progress-steps">
+        <div class="progress-step {% if not submitted %}active{% else %}completed{% endif %}">
+          <span>📝</span> Information
+        </div>
+        <div class="progress-step {% if not submitted %}active{% else %}completed{% endif %}">
+          <span>📄</span> Documents
+        </div>
+        <div class="progress-step {% if submitted %}active{% else %}active{% endif %}">
+          <span>✅</span> Submit
+        </div>
+      </div>
+      
+      <!-- Benefits -->
+      <div class="benefit-cards">
+        <div class="benefit-card">
+          <div class="benefit-card-icon">💰</div>
+          <div class="benefit-card-title">Competitive Rates</div>
+          <div class="benefit-card-text">Earn attractive commissions</div>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-card-icon">🌐</div>
+          <div class="benefit-card-title">Remote Work</div>
+          <div class="benefit-card-text">Work from anywhere</div>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-card-icon">📈</div>
+          <div class="benefit-card-title">Career Growth</div>
+          <div class="benefit-card-text">Build your reputation</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width: 800px; margin: 0 auto;">
+    {% if submitted %}
+      <div class="form-card" style="background: linear-gradient(135deg, #ffffff, #f8fff8); border: none; text-align: center; padding: 3rem; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
+        <div class="success-animation">✓</div>
+        <h2 style="color: #1a1a2e; margin-bottom: 1rem; font-size: 2rem; font-weight: 800;">Application Submitted!</h2>
+        <p style="color: #666; margin: 0 0 1.5rem 0; font-size: 1.1rem; line-height: 1.6;">Thank you for applying to be a consultant. Our team will review your application and contact you within 2-3 business days.</p>
+        {% if application %}
+          <p style="margin: 1.5rem 0;">
+            <a href="{% url 'consultations:download_consultation_receipt' application.id %}" class="btn" style="background: linear-gradient(135deg, #0d6efd, #0a58ca); color: white; padding: 0.875rem 1.75rem; display: inline-block; margin: 0 0.5rem; border-radius: 12px; font-weight: 600; text-decoration: none; box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);">📥 Download Receipt</a>
+          </p>
+        {% endif %}
+        <a href="{% url 'accounts:home' %}" class="btn" style="background: linear-gradient(135deg, #28a745, #1e7e34); color: white; padding: 0.875rem 2rem; border-radius: 12px; font-weight: 600; text-decoration: none; display: inline-block; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);">Return to Home</a>
+      </div>
+    {% else %}
+      <div class="form-card" style="background: white; border: none; box-shadow: 0 10px 40px rgba(0,0,0,0.08); border-radius: 20px; padding: 2.5rem;">
+        <div style="text-align: center; margin-bottom: 2rem;">
+          <h2 style="color: #1a1a2e; margin-bottom: 0.75rem; font-size: 1.8rem; font-weight: 800;">Apply Now</h2>
+          <p style="color: #666; line-height: 1.6;">Complete the form below and upload your resume/CV. Download the qualification form for detailed instructions:</p>
+        </div>
+        
+        <div style="text-align: center; margin-bottom: 2rem;">
+          <a href="{% url 'consultations:download_qualification_form' %}" download class="download-link">
+            <span>📄</span> Download Qualification Form (PDF)
+          </a>
+        </div>
+
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          <!-- Personal Information Section -->
+          <div class="form-section">
+            <h3 class="form-section-title">Personal Information</h3>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+              <div class="input-group">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #1a1a2e;">Full Name</label>
+                <input type="text" name="full_name" placeholder="Your full name" value="{{ request.user.get_full_name|default:request.user.username }}" required>
+                <span class="input-icon">👤</span>
+              </div>
+              <div class="input-group">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #1a1a2e;">Email Address</label>
+                <input type="email" name="email" placeholder="your.email@example.com" value="{{ request.user.email }}" required>
+                <span class="input-icon">✉️</span>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+              <div class="input-group">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #1a1a2e;">Phone Number</label>
+                <input type="tel" name="phone" placeholder="+1 (555) 000-0000" required>
+                <span class="input-icon">📱</span>
+              </div>
+              <div class="input-group">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #1a1a2e;">Years of Experience</label>
+                <input type="number" name="experience_years" placeholder="5" min="0" max="80" value="5" required>
+                <span class="input-icon">⏱️</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Professional Information Section -->
+          <div class="form-section">
+            <h3 class="form-section-title">Professional Information</h3>
+            
+            <div class="input-group">
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #1a1a2e;">Specialization</label>
+              <select name="specialization">
+                <option value="General Construction">General Construction</option>
+                <option value="Residential">Residential</option>
+                <option value="Commercial">Commercial</option>
+                <option value="Infrastructure">Infrastructure</option>
+                <option value="Structural Engineering">Structural Engineering</option>
+                <option value="Interior Design">Interior Design</option>
+                <option value="Project Management">Project Management</option>
+              </select>
+              <span class="input-icon" style="left: auto; right: 1rem;">🎯</span>
+            </div>
+
+            <div class="input-group">
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #1a1a2e;">Cover Letter</label>
+              <textarea name="cover_letter" placeholder="Tell us about your experience and why you'd like to join as a consultant..."></textarea>
+            </div>
+          </div>
+
+          <!-- Documents Section -->
+          <div class="form-section">
+            <h3 class="form-section-title">Documents</h3>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+              <div>
+                <label style="display: block; margin-bottom: 0.75rem; font-weight: 600; color: #1a1a2e;">Resume (PDF or DOC)</label>
+                <div class="file-upload">
+                  <div class="file-upload-icon">📄</div>
+                  <div class="file-upload-text">Click to upload resume</div>
+                  <input type="file" name="resume" accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
+                </div>
+              </div>
+              <div>
+                <label style="display: block; margin-bottom: 0.75rem; font-weight: 600; color: #1a1a2e;">CV (optional)</label>
+                <div class="file-upload">
+                  <div class="file-upload-icon">📋</div>
+                  <div class="file-upload-text">Click to upload CV</div>
+                  <input type="file" name="cv" accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary">🚀 Submit Application</button>
+        </form>
+      </div>
+    {% endif %}
+
+    <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: #f8f9fa; border-radius: 16px;">
+      <p style="color: #666; margin-bottom: 0.5rem;">Already have an account? <a href="{% url 'accounts:login' %}" style="color: #ff7f31; font-weight: 600; text-decoration: none;">Login here</a></p>
+      <p style="color: #666; margin: 0;">Need help? <a href="{% url 'accounts:contact' %}" style="color: #ff7f31; font-weight: 600; text-decoration: none;">Contact us</a></p>
+    </div>
+
+    <!-- Footer -->
+    <div style="text-align: center; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid #e0e0e0;">
+      <p style="color: #999; font-size: 0.9rem; margin: 0;">© 2024 <span style="color: #ff7f31; font-weight: 600;">@victorTech</span> All Rights Reserved.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,910 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Professional Notification Banner -->
+<div style="background: linear-gradient(90deg, #ffeb3b, #ffc107, #ffeb3b); color: #000; padding: 12px 16px; font-weight: 600; font-size: 14px; border: 2px solid #f57c00; border-radius: 10px; margin-bottom: 1.5rem; text-align: center; box-shadow: 0 4px 12px rgba(245, 124, 0, 0.2);">
+  📢 All notifications are only sent to email | Track your orders in real-time | Manage your products
+</div>
+
+<style>
+/* Base Styles */
+.supplier-dashboard {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Hero Section */
+.hero-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #6B8DD6 100%);
+}
+
+.hero-section {
+  color: white;
+  padding: 3rem 2rem;
+  border-radius: 20px;
+  margin-bottom: 2.5rem;
+  text-align: center;
+  box-shadow: 0 12px 40px rgba(102, 126, 234, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 400px;
+  height: 400px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 50%;
+}
+
+.hero-section::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  left: -10%;
+  width: 300px;
+  height: 300px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 50%;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  margin: 0 0 0.75rem 0;
+  font-weight: 800;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.hero-subtitle {
+  font-size: 1.15rem;
+  margin: 0 0 2rem 0;
+  opacity: 0.95;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Quick Stats Cards */
+.stat-card {
+  background: white;
+  border: none;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ff7f31, #ff4500);
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+.stat-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.stat-label {
+  color: #666;
+  font-size: 0.95rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.stat-description {
+  color: #999;
+  font-size: 0.85rem;
+  margin: 0.25rem 0 0 0;
+}
+
+/* Section Cards */
+.dashboard-section {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.section-card {
+  background: white;
+  border: none;
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.section-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f0f0f0;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.section-description {
+  color: #666;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+/* Product Grid */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.product-card {
+  background: white;
+  border: none;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+}
+
+.product-icon {
+  width: 100%;
+  height: 120px;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+}
+
+.product-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 0.5rem;
+}
+
+.product-description {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.product-price {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #ff7f31;
+  margin-bottom: 0.5rem;
+}
+
+.product-meta {
+  color: #6c757d;
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+}
+
+/* Buttons */
+.btn-primary {
+  background: linear-gradient(135deg, #ff7f31, #ff4500);
+  border: none;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #e66a29, #e03e00);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 127, 49, 0.4);
+  color: white;
+  text-decoration: none;
+}
+
+.btn-secondary {
+  background: white;
+  color: #ff7f31;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #ff7f31;
+  border-radius: 10px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: #ff7f31;
+  color: white;
+  text-decoration: none;
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  border: none;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+  color: white;
+  text-decoration: none;
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #dc3545, #fd7e14);
+  border: none;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.btn-danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+  color: white;
+  text-decoration: none;
+}
+
+.btn-warning {
+  background: linear-gradient(135deg, #ffc107, #fd7e14);
+  border: none;
+  color: #212529;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.btn-warning:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
+  color: #212529;
+  text-decoration: none;
+}
+
+.btn-small {
+  flex: 1;
+  min-width: 80px;
+  padding: 0.5rem;
+  font-size: 0.85rem;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s ease;
+}
+
+/* Order Cards */
+.order-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.order-card {
+  background: white;
+  border: none;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+}
+
+.order-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.order-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 0.25rem;
+}
+
+.order-number {
+  color: #6c757d;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-completed { background: #d4edda; color: #155724; }
+.status-shipped { background: #cce5ff; color: #004085; }
+.status-pending { background: #fff3cd; color: #856404; }
+.status-pending-payment { background: #fff3cd; color: #856404; }
+.status-complete-waiting-transport { background: #e8f5e8; color: #2e7d32; }
+.status-canceled { background: #f8d7da; color: #721c24; }
+.status-default { background: #e2e3e5; color: #383d41; }
+
+.order-details {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #495057;
+}
+
+.detail-value {
+  color: #6c757d;
+}
+
+.order-total {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #28a745;
+  text-align: center;
+  margin: 1rem 0;
+  padding: 0.75rem;
+  background: linear-gradient(135deg, #e8f8f5, #d1ecf1);
+  border-radius: 8px;
+}
+
+.order-date {
+  color: #6c757d;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 16px;
+  border: 2px dashed #dee2e6;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.empty-description {
+  color: #6c757d;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+/* Filter Section */
+.filter-section {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.filter-form {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filter-label {
+  font-weight: 600;
+  color: #495057;
+  margin: 0;
+}
+
+.filter-select {
+  padding: 0.5rem 1rem;
+  border: 2px solid #e0e7ff;
+  border-radius: 10px;
+  background: white;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.filter-select:focus {
+  border-color: #ff7f31;
+  box-shadow: 0 0 0 4px rgba(255, 127, 49, 0.1);
+  outline: none;
+}
+
+/* Table Styles */
+.table-container {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  font-weight: 600;
+  color: #495057;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e9ecef;
+  align-items: center;
+  transition: background 0.2s ease;
+}
+
+.table-row:hover {
+  background: #f8f9fa;
+}
+
+/* Profile Card */
+.profile-card {
+  background: white;
+  border: none;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  margin-bottom: 2rem;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.profile-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff7f31, #ff4500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.profile-info h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #1a1a2e;
+}
+
+.profile-info p {
+  margin: 0;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 1.8rem;
+  }
+  
+  .table-header, .table-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  
+  .table-header {
+    display: none;
+  }
+  
+  .table-row {
+    padding: 1rem;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+  }
+}
+</style>
+
+<div class="supplier-dashboard">
+  <div class="container">
+    
+    <!-- Hero Section -->
+    <section class="hero-section dashboard-section">
+      <div class="hero-content">
+        <h1 class="hero-title">🏪 Welcome back, {{ request.user.username }}! 👋</h1>
+        <p class="hero-subtitle">Manage your products, track incoming orders, and grow your construction supply business.</p>
+        
+        <!-- Quick Actions -->
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
+          <a href="{% url 'suppliers:product_create' %}" style="background: rgba(255, 255, 255, 0.25); color: white; padding: 1rem 2rem; border-radius: 12px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3);" onmouseover="this.style.background='rgba(255,255,255,0.35)'; this.style.transform='translateY(-3px)';" onmouseout="this.style.background='rgba(255,255,255,0.25)'; this.style.transform='translateY(0)';">
+            ➕ Add Product
+          </a>
+          <a href="{% url 'suppliers:create_order' %}" style="background: rgba(255, 255, 255, 0.25); color: white; padding: 1rem 2rem; border-radius: 12px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3);" onmouseover="this.style.background='rgba(255,255,255,0.35)'; this.style.transform='translateY(-3px)';" onmouseout="this.style.background='rgba(255,255,255,0.25)'; this.style.transform='translateY(0)';">
+            📋 Create Order
+          </a>
+          <a href="{% url 'dashboard:download_supplier_report' %}" style="background: rgba(255, 255, 255, 0.25); color: white; padding: 1rem 2rem; border-radius: 12px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3);" onmouseover="this.style.background='rgba(255,255,255,0.35)'; this.style.transform='translateY(-3px)';" onmouseout="this.style.background='rgba(255,255,255,0.25)'; this.style.transform='translateY(0)';">
+            📊 Download Report
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Stats Section -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem;">
+      <div class="stat-card">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+          <div class="stat-icon" style="background: linear-gradient(135deg, #ff7f31, #ff4500);">📦</div>
+          <span class="stat-number" style="color: #ff7f31;">{{ products|length }}</span>
+        </div>
+        <h3 class="stat-label">Total Products</h3>
+        <p class="stat-description">In your catalog</p>
+      </div>
+      
+      <div class="stat-card">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+          <div class="stat-icon" style="background: linear-gradient(135deg, #667eea, #764ba2);">📋</div>
+          <span class="stat-number" style="color: #667eea;">{{ supplier_created_orders|length }}</span>
+        </div>
+        <h3 class="stat-label">Orders Created</h3>
+        <p class="stat-description">For your customers</p>
+      </div>
+      
+      <div class="stat-card">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+          <div class="stat-icon" style="background: linear-gradient(135deg, #ffc107, #fd7e14);">📨</div>
+          <span class="stat-number" style="color: #ffc107;">{{ supplier_orders|length }}</span>
+        </div>
+        <h3 class="stat-label">Incoming Orders</h3>
+        <p class="stat-description">From customers</p>
+      </div>
+      
+      <div class="stat-card">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+          <div class="stat-icon" style="background: linear-gradient(135deg, #28a745, #20c997);">✅</div>
+          <span class="stat-number" style="color: #28a745;">
+            {% with completed=0 %}
+              {% for order in supplier_orders %}{% if order.status == 'completed' %}{% with completed=completed|add:1 %}{% endif %}{% endif %}{{ completed }}
+            {% endwith %}
+          </span>
+        </div>
+        <h3 class="stat-label">Completed</h3>
+        <p class="stat-description">Successfully delivered</p>
+      </div>
+    </div>
+
+    <!-- Your Products Section -->
+    <section class="section-card dashboard-section" style="animation-delay: 0.1s;">
+      <div class="section-header">
+        <h2 class="section-title">📦 Your Products</h2>
+        <a href="{% url 'suppliers:product_create' %}" class="btn-primary">+ Add New Product</a>
+      </div>
+      <p class="section-description">Manage your product catalog and inventory</p>
+      
+      {% if products %}
+        <div class="product-grid">
+          {% for p in products %}
+            <article class="product-card">
+              <div class="product-icon">📦</div>
+              <h3 class="product-name">{{ p.name }}</h3>
+              <p class="product-description">{{ p.description|truncatewords:8 }}</p>
+              <p class="product-price">KSH {{ p.cost }}</p>
+              <p class="product-meta">📍 {{ p.location }}</p>
+              <p class="product-meta">🏷️ {{ p.get_category_display }}</p>
+              <p class="product-meta">⭐ {{ p.get_quality_display }}</p>
+              <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                <a href="{% url 'suppliers:product_edit' p.pk %}" class="btn-primary btn-small">✏️ Edit</a>
+                <a href="{% url 'suppliers:product_delete' p.pk %}" class="btn-danger btn-small">🗑️ Delete</a>
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state">
+          <div class="empty-icon">📦</div>
+          <h3 class="empty-title">No Products Yet</h3>
+          <p class="empty-description">Start building your product catalog to attract customers</p>
+          <a href="{% url 'suppliers:product_create' %}" class="btn-primary">Create Your First Product</a>
+        </div>
+      {% endif %}
+    </section>
+
+    <!-- Orders Created by Supplier Section -->
+    <section class="section-card dashboard-section" style="animation-delay: 0.2s;">
+      <div class="section-header">
+        <h2 class="section-title">📋 Orders You Created</h2>
+        <a href="{% url 'suppliers:create_order' %}" class="btn-success" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+          <span>+</span>
+          <div style="text-align: left; line-height: 1.2;">
+            <div style="font-weight: 700; font-size: 0.9rem;">Create New Order</div>
+            <div style="font-size: 0.7rem; opacity: 0.9;">{{ request.user.username }} • {{ supplier.company_name|default:'Supplier' }}</div>
+          </div>
+        </a>
+      </div>
+      <p class="section-description">Orders you've created for your customers. Manage them here.</p>
+
+      {% if supplier_created_orders %}
+        <div class="order-grid">
+          {% for order in supplier_created_orders %}
+            <div class="order-card">
+              <!-- Product Image -->
+              <div style="text-align: center; margin-bottom: 1rem;">
+                {% if order.product.image_url %}
+                  <img src="{{ order.product.image_url }}" alt="{{ order.product.name }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 12px; border: 3px solid #e9ecef;">
+                {% else %}
+                  <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #f8f9fa, #e9ecef); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto;">📦</div>
+                {% endif %}
+              </div>
+
+              <div class="order-header">
+                <div>
+                  <h3 class="order-title">{{ order.product.name }}</h3>
+                  <p class="order-number">Order #{{ order.order_number }}</p>
+                </div>
+                <span class="status-badge 
+                  {% if order.status == 'completed' %}status-completed
+                  {% elif order.status == 'shipped' %}status-shipped
+                  {% elif order.status == 'pending_payment' %}status-pending
+                  {% elif order.status == 'complete_waiting_transport' %}status-complete-waiting-transport
+                  {% else %}status-default{% endif %}">
+                  {{ order.get_status_display }}
+                </span>
+              </div>
+
+              <div class="order-details">
+                <div class="detail-row">
+                  <span class="detail-label">Product:</span>
+                  <span class="detail-value">{{ order.product.name }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Price:</span>
+                  <span class="detail-value">KSH {{ order.product.cost }} each</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">In Stock:</span>
+                  <span class="detail-value">{{ order.product.available_quantity }} units</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Quantity:</span>
+                  <span class="detail-value">{{ order.quantity }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Supplier:</span>
+                  <span class="detail-value">{{ order.product.supplier.company_name|default:order.product.supplier.user.username }}</span>
+                </div>
+              </div>
+
+              <div class="order-total">
+                <strong>Total: KSH {{ order.total_cost }}</strong>
+              </div>
+              <p class="order-date">📅 Created: {{ order.created_at|date:'M d, Y H:i' }}</p>
+
+              <div class="action-buttons">
+                <a href="{% url 'suppliers:order_detail' order.id %}" class="btn-secondary btn-small">👁️ View</a>
+                <a href="{% url 'orders:edit_supplier_order' order.id %}" class="btn-primary btn-small">✏️ Edit</a>
+                <form method="post" action="{% url 'orders:delete_supplier_order' order.id %}" style="flex: 1;">
+                  {% csrf_token %}
+                  <button type="submit" class="btn-danger btn-small" onclick="return confirm('Are you sure you want to delete this order?');">🗑️ Delete</button>
+                </form>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state">
+          <div class="empty-icon">📋</div>
+          <h3 class="empty-title">No Orders Created</h3>
+          <p class="empty-description">Create your first order for a customer to get started</p>
+          <a href="{% url 'suppliers:create_order' %}" class="btn-success">Create Your First Order</a>
+        </div>
+      {% endif %}
+    </section>
+
+    <!-- All Orders for Your Products Section -->
+    <section class="section-card dashboard-section" style="animation-delay: 0.25s;">
+      <div class="section-header">
+        <h2 class="section-title">📋 All Orders for Your Products</h2>
+      </div>
+      <p class="section-description">Complete list of all orders placed for your products</p>
+
+      {% if all_product_orders %}
+        <div class="table-container">
+          <div class="table-header">
+            <div>Customer</div>
+            <div>Quantity</div>
+            <div>Status</div>
+            <div>Total Cost</div>
+            <div>Date</div>
+          </div>
+          {% for order in all_product_orders %}
+            <div class="table-row">
+              <div style="font-weight: 600; color: #1a1a2e;">{{ order.customer_name }}</div>
+              <div>{{ order.quantity }} units</div>
+              <div>
+                <span class="status-badge 
+                  {% if order.status == 'completed' %}status-completed
+                  {% elif order.status == 'shipped' %}status-shipped
+                  {% elif order.status == 'pending_payment' or order.status == 'pending' %}status-pending
+                  {% elif order.status == 'complete_waiting_transport' %}status-complete-waiting-transport
+                  {% elif order.status == 'canceled' %}status-canceled
+                  {% else %}status-default{% endif %}">
+                  {{ order.get_status_display }}
+                </span>
+              </div>
+              <div style="font-weight: 700; color: #28a745;">KSH {{ order.total_cost }}</div>
+              <div style="font-size: 0.85rem; color: #6c757d;">{{ order.created_at|date:"M d, Y H:i" }}</div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state">
+          <div class="empty-icon">📋</div>
+          <h3 class="empty-title">No Orders Yet</h3>
+          <p class="empty-description">Orders for your products will appear here once customers start placing them</p>
+        </div>
+      {% endif %}
+    </section>
+
+    <!-- Print Reports Section -->
+    <section class="section-card dashboard-section" style="animation-delay: 0.3s;">
+      <div class="section-header">
+        <h2 class="section-title">📄 Print Reports</h2>
+      </div>
+      <p class="section-description">Download comprehensive reports of customer orders for your records.</p>
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href="{% url 'dashboard:download_supplier_report' %}" class="btn-success" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+          📊 Download Order Report
+        </a>
+      </div>
+      <small style="color: #999; margin-top: 0.5rem; display: block;">Reports include current date, key points, and all customer order details</small>
+    </section>
+
+    <!-- Incoming Orders Section -->
+    <section class="section-card dashboard-section" style="animation-delay: 0.35s;">
+      <div class="section-header">
+        <h2 class="section-title">📨 Incoming Orders</h2>
+        <form method="post" action="{% url 'suppliers:sell_all_orders' %}" style="display:inline;">
+          {% csrf_token %}
+          <button class="btn-warning" style="padding: 0.5rem 1rem;">⚡ Sell All Pending</button>
+        </form>
+      </div>
+      <p class="section-description">Orders from customers for your products</p>
+
+      <div class="filter-section">
+        <form method="get" class="filter-form">
+          <label class="filter-label">Filter by Status:</label>
+          <select name="status" class="filter-select">
+            <option value="">All Orders</option>
+            <option value="pending" {% if selected_status == 'pending' %}selected{% endif %}>Pending {% if order_status_counts.pending %}({{ order_status_counts.pending }}){% endif %}</option>
+            <option value="shipped" {% if selected_status == 'shipped' %}selected{% endif %}>Shipped {% if order_status_counts.shipped %}({{ order_status_counts.shipped }}){% endif %}</option>
+            <option value="complete_waiting_transport" {% if selected_status == 'complete_waiting_transport' %}selected{% endif %}>Complete Waiting for Transport {% if order_status_counts.complete_waiting

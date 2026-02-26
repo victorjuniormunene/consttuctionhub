@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="form-card">
+    <h1>Order #{{ order.order_number|default:order.id }}</h1>
+
+    <!-- Product Image -->
+    <div style="text-align: center; margin-bottom: 2rem;">
+        {% if order.product.image_url %}
+            <img src="{{ order.product.image_url }}" alt="{{ order.product.name }}" style="width: 100%; max-width: 300px; height: 200px; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+        {% else %}
+            <div style="width: 100%; max-width: 300px; height: 200px; background: linear-gradient(135deg, #ff7f31, #ff9a5e); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 3rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">📦</div>
+        {% endif %}
+    </div>
+
+    <p><strong>Product:</strong> {{ order.product.name }}</p>
+    <p><strong>Description:</strong> {{ order.product.description }}</p>
+    {% if not user.is_supplier %}
+        <p><strong>Supplier:</strong> {{ order.product.supplier.company_name }}</p>
+        <p><strong>Supplier Location:</strong> {{ order.product.supplier.location }}</p>
+        <p><strong>Supplier Contact:</strong> {{ order.product.supplier.contact_number }}</p>
+        <p><strong>Stock in Warehouse:</strong> {{ order.product.available_quantity }}</p>
+        {% if order.product.supplier.offers %}
+            <p><strong>Supplier Offers:</strong> {{ order.product.supplier.offers }}</p>
+        {% endif %}
+    {% endif %}
+    <p><strong>Customer:</strong> {% if order.customer %}{{ order.customer.get_full_name|default:order.customer.username }}{% else %}{{ order.customer_name }}{% endif %}</p>
+    <p><strong>Customer Number:</strong> {{ order.customer_number }}</p>
+    <p><strong>Customer Location:</strong> {{ order.customer_location }}</p>
+    <p><strong>Quantity:</strong> {{ order.quantity }}</p>
+    <p><strong>Total Cost:</strong> ${{ order.total_cost }}</p>
+    <p><strong>Status:</strong> {{ order.get_status_display }}</p>
+    <p><strong>Ordered on:</strong> {{ order.created_at|date:"M d, Y H:i" }}</p>
+    {% if order.updated_at %}
+        <p><strong>Last Updated:</strong> {{ order.updated_at|date:"M d, Y H:i" }}</p>
+    {% endif %}
+
+    {% if user.is_supplier %}
+        <form method="post" style="display:inline">
+            {% csrf_token %}
+            {% if order.status == 'pending' %}
+                <input type="hidden" name="action" value="mark_shipped">
+                <button class="btn" type="submit">Mark as Shipped</button>
+            {% elif order.status == 'shipped' %}
+                <input type="hidden" name="action" value="mark_completed">
+                <button class="btn" type="submit">Mark as Completed</button>
+            {% endif %}
+        </form>
+        <form method="post" style="display:inline; margin-left:0.5rem;">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="cancel">
+            <button class="btn secondary" type="submit">Cancel Order</button>
+        </form>
+    {% endif %}
+
+    {% if user.user_type == 'customer' and order.status == 'paid' %}
+        <a class="btn" href="{% url 'orders:download_receipt' order.id %}" target="_blank">Download Receipt</a>
+    {% endif %}
+
+    <a class="btn secondary" href="{% url 'orders:order_list' %}">Back to Orders</a>
+</div>
+{% endblock %}

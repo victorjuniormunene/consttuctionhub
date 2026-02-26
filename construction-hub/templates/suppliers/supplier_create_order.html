@@ -1,0 +1,273 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+.form-container {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
+.form-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 2rem;
+  margin: 0 auto;
+  max-width: 600px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.form-title {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.form-description {
+  color: #666;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1rem;
+}
+
+.form-section {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.section-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: white;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-control[readonly] {
+  background: #f8f9fa;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, #ff7f31 0%, #ff4500 100%);
+  color: white;
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  width: 100%;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 127, 49, 0.4);
+}
+
+.alert {
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.alert-error {
+  background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.alert-success {
+  background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+  color: #0c5460;
+  border: 1px solid #bee5eb;
+}
+
+.product-info {
+  background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  border: 1px solid #c3e6cb;
+}
+
+.product-info strong {
+  color: #155724;
+}
+</style>
+
+<div class="form-container">
+  <div class="container">
+    <div class="form-card">
+      <h1 class="form-title">📦 Create Order</h1>
+      <p class="form-description">Fill in the supplier details and select a product to create an order.</p>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+
+
+
+        <!-- Supplier Information Section -->
+        <div class="form-section">
+          <h3 class="section-title">🏪 Supplier Information</h3>
+
+          <div class="form-group">
+            <label for="{{ form.supplier_name.id_for_label }}" class="form-label">Supplier Name *</label>
+            {{ form.supplier_name }}
+            {% if form.supplier_name.errors %}
+              <div class="text-danger">{{ form.supplier_name.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label for="{{ form.supplier_location.id_for_label }}" class="form-label">Supplier Location *</label>
+            {{ form.supplier_location }}
+            {% if form.supplier_location.errors %}
+              <div class="text-danger">{{ form.supplier_location.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label for="{{ form.supplier_phone.id_for_label }}" class="form-label">Supplier Phone Number *</label>
+            {{ form.supplier_phone }}
+            {% if form.supplier_phone.errors %}
+              <div class="text-danger">{{ form.supplier_phone.errors.0 }}</div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Product Selection Section -->
+        <div class="form-section">
+          <h3 class="section-title">📦 Product Selection</h3>
+
+          <div class="form-group">
+            <label for="{{ form.product_name.id_for_label }}" class="form-label">Select Product *</label>
+            {{ form.product_name }}
+            {% if form.product_name.errors %}
+              <div class="text-danger">{{ form.product_name.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label for="{{ form.product_image.id_for_label }}" class="form-label">Product Image</label>
+            {{ form.product_image }}
+            {% if form.product_image.errors %}
+              <div class="text-danger">{{ form.product_image.errors.0 }}</div>
+            {% endif %}
+            <small class="form-text text-muted">Upload an image for the product (optional)</small>
+          </div>
+
+          <div class="form-group">
+            <label for="{{ form.quantity.id_for_label }}" class="form-label">Quantity *</label>
+            {{ form.quantity }}
+            {% if form.quantity.errors %}
+              <div class="text-danger">{{ form.quantity.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label for="{{ form.price.id_for_label }}" class="form-label">Price *</label>
+            {{ form.price }}
+            {% if form.price.errors %}
+              <div class="text-danger">{{ form.price.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label for="{{ form.available_quantity.id_for_label }}" class="form-label">Available Quantity *</label>
+            {{ form.available_quantity }}
+            {% if form.available_quantity.errors %}
+              <div class="text-danger">{{ form.available_quantity.errors.0 }}</div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Special Offers Section -->
+        <div class="form-section" style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border: 2px solid #ff9800;">
+          <h3 class="section-title" style="color: #e65100;">🎁 Special Offers</h3>
+          <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">Add a special offer to attract customers! The offer will be displayed prominently on the product.</p>
+
+          <div class="form-group">
+            <label for="{{ form.offer.id_for_label }}" class="form-label" style="color: #e65100; font-weight: 700;">Select Offer *</label>
+            {{ form.offer }}
+            {% if form.offer.errors %}
+              <div class="text-danger">{{ form.offer.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
+            <div style="background: white; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #4caf50; flex: 1; min-width: 150px;">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span style="font-size: 1.5rem;">🚚</span>
+                <div>
+                  <div style="font-weight: 700; color: #2e7d32;">Free Delivery</div>
+                  <div style="font-size: 0.8rem; color: #666;">Customer gets free shipping</div>
+                </div>
+              </div>
+            </div>
+            <div style="background: white; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #2196f3; flex: 1; min-width: 150px;">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span style="font-size: 1.5rem;">💰</span>
+                <div>
+                  <div style="font-weight: 700; color: #1565c0;">10% Discount</div>
+                  <div style="font-size: 0.8rem; color: #666;">Customer saves 10%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit">🚀 Create Order</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

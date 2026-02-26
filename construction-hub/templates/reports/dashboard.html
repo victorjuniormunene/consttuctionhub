@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container">
+  <div class="dashboard-section">
+    <h2 class="dashboard-title">Reports Dashboard</h2>
+
+    <div class="dashboard-grid">
+      <!-- Statistics Cards -->
+      <div class="dashboard-card">
+        <h3>Platform Statistics</h3>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-label">Total Orders</span>
+            <span class="stat-value">{{ total_orders }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Total Customers</span>
+            <span class="stat-value">{{ total_customers }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Total Suppliers</span>
+            <span class="stat-value">{{ total_suppliers }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Total Products</span>
+            <span class="stat-value">{{ total_products }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Consultant Applications</span>
+            <span class="stat-value">{{ total_consultant_apps }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Total Revenue</span>
+            <span class="stat-value">KSH {{ total_revenue|floatformat:2 }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Recent Orders (30 days)</span>
+            <span class="stat-value">{{ recent_orders }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Report Generation -->
+      <div class="dashboard-card">
+        <h3>Generate Reports</h3>
+        <div class="report-options">
+          <div class="report-section">
+            <h4>Customer Reports</h4>
+            <div class="report-buttons">
+              <a href="{% url 'reports:customer_pdf' %}" class="btn-primary" target="_blank">
+                📄 Download PDF Report
+              </a>
+              <a href="{% url 'reports:customer_excel' %}" class="btn-secondary" target="_blank">
+                📊 Download Excel Report
+              </a>
+            </div>
+          </div>
+
+          <div class="report-section">
+            <h4>Supplier Reports</h4>
+            <div class="report-buttons">
+              <a href="{% url 'reports:supplier_pdf' %}" class="btn-primary" target="_blank">
+                📄 Download PDF Report
+              </a>
+              <a href="{% url 'reports:supplier_excel' %}" class="btn-secondary" target="_blank">
+                📊 Download Excel Report
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="dashboard-card">
+        <h3>Quick Actions</h3>
+        <div class="action-buttons">
+          <a href="{% url 'admin:index' %}" class="btn-primary">Admin Panel</a>
+          <a href="{% url 'accounts:dashboard' %}" class="btn-secondary">User Dashboard</a>
+          <a href="{% url 'products:product_list' %}" class="btn-secondary">View Products</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.dashboard-section {
+  padding: 2rem 0;
+}
+
+.dashboard-title {
+  color: var(--text);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+}
+
+.dashboard-card {
+  background: var(--background);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.dashboard-card h3 {
+  color: var(--text);
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.stat-item {
+  background: var(--background-light);
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.stat-label {
+  display: block;
+  color: var(--text-light);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  display: block;
+  color: var(--primary-color);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.report-options {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.report-section h4 {
+  color: var(--text);
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.report-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-primary, .btn-secondary {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-primary {
+  background: var(--primary-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--primary-color-dark);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: var(--background-light);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background: var(--border);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .report-buttons, .action-buttons {
+    flex-direction: column;
+  }
+
+  .btn-primary, .btn-secondary {
+    width: 100%;
+  }
+}
+</style>
+{% endblock %}

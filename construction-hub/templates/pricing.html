@@ -1,0 +1,516 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-40px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  .pricing-card {
+    animation: fadeInUp 0.8s ease-out backwards;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  
+  .pricing-card:hover {
+    transform: translateY(-15px);
+    box-shadow: 0 25px 60px rgba(15, 118, 110, 0.25);
+  }
+  
+  .glass-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 100%);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  }
+  
+  .feature-icon {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .popular-badge {
+    animation: pulse 2s ease-in-out infinite;
+  }
+  
+  .gradient-text {
+    background: linear-gradient(135deg, #0f766e, #14b8a6, #2dd4bf);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .btn-gradient {
+    background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .btn-gradient::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s ease;
+  }
+  
+  .btn-gradient:hover::before {
+    left: 100%;
+  }
+  
+  .btn-gradient:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(15, 118, 110, 0.4);
+  }
+  
+  .faq-item {
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .faq-item:hover {
+    background: rgba(15, 118, 110, 0.05);
+  }
+  
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.4s ease;
+  }
+  
+  .faq-item.active .faq-answer {
+    max-height: 200px;
+    padding-top: 1rem;
+  }
+  
+  .faq-icon {
+    transition: transform 0.3s ease;
+  }
+  
+  .faq-item.active .faq-icon {
+    transform: rotate(180deg);
+  }
+  
+  .price-toggle {
+    background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+    border: 2px solid #0f766e;
+  }
+  
+  .toggle-switch {
+    transition: all 0.3s ease;
+  }
+  
+  .toggle-switch.active {
+    transform: translateX(100%);
+    background: #0f766e;
+  }
+  
+  .ribbon {
+    position: absolute;
+    top: 20px;
+    right: -35px;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    padding: 0.4rem 2.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    transform: rotate(45deg);
+    box-shadow: 0 2px 10px rgba(245, 158, 11, 0.4);
+  }
+  
+  .trust-badge {
+    background: linear-gradient(135deg, rgba(15, 118, 110, 0.1), rgba(20, 184, 166, 0.1));
+    border: 1px solid rgba(15, 118, 110, 0.2);
+  }
+  
+  .section-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #0f766e, #14b8a6);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    box-shadow: 0 8px 20px rgba(15, 118, 110, 0.3);
+  }
+  
+  .floating-shape {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.1;
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .hero-gradient {
+    background: linear-gradient(135deg, #0f766e 0%, #134e4a 50%, #1e3a5f 100%);
+    background-size: 200% 200%;
+    animation: gradientMove 8s ease infinite;
+  }
+  
+  .cta-gradient {
+    background: linear-gradient(135deg, #0f766e 0%, #134e4a 50%, #0f172a 100%);
+    background-size: 200% 200%;
+    animation: gradientMove 10s ease infinite;
+  }
+  
+  .check-icon {
+    width: 22px;
+    height: 22px;
+    background: linear-gradient(135deg, #0f766e, #14b8a6);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+  }
+</style>
+
+<div class="container" style="padding: 3rem 1rem; max-width: 1200px;">
+  <!-- Hero Header Section -->
+  <div class="hero-gradient" style="border-radius: 24px; padding: 4rem 2rem; margin-bottom: 4rem; position: relative; overflow: hidden; animation: fadeInUp 0.8s ease-out;">
+    <!-- Floating shapes -->
+    <div class="floating-shape" style="width: 200px; height: 200px; background: #14b8a6; top: -50px; left: -50px;"></div>
+    <div class="floating-shape" style="width: 150px; height: 150px; background: #2dd4bf; bottom: -30px; right: -30px; animation-delay: 1s;"></div>
+    <div class="floating-shape" style="width: 100px; height: 100px; background: #f59e0b; top: 30%; right: 10%; animation-delay: 2s;"></div>
+    
+    <div style="position: relative; z-index: 1; text-align: center;">
+      <div style="display: inline-block; background: rgba(255,255,255,0.15); padding: 0.5rem 1.5rem; border-radius: 50px; margin-bottom: 1.5rem; backdrop-filter: blur(10px);">
+        <span style="color: #99f6e4; font-weight: 600; font-size: 0.9rem;">🏗️ Construction Hub Pricing</span>
+      </div>
+      
+      <h1 style="font-size: 3rem; color: white; margin-bottom: 1rem; font-weight: 800; text-shadow: 0 2px 20px rgba(0,0,0,0.3);">
+        Flexible Plans. <span class="gradient-text" style="background: linear-gradient(135deg, #2dd4bf, #f59e0b); -webkit-background-clip: text;">Powerful Features.</span> No Surprises.
+      </h1>
+      
+      <p style="font-size: 1.3rem; color: #ccfbf1; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+        Transparent pricing in KSH designed to grow your construction business. No hidden fees, cancel anytime.
+      </p>
+      
+      <!-- Monthly/Yearly Toggle -->
+      <div style="display: inline-flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.1); padding: 0.75rem 1.5rem; border-radius: 50px; backdrop-filter: blur(10px);">
+        <span id="monthly-label" style="color: white; font-weight: 600; transition: all 0.3s;">Monthly</span>
+        <div class="price-toggle" style="width: 56px; height: 30px; border-radius: 50px; position: relative; cursor: pointer;" onclick="togglePricing()">
+          <div id="toggle-knob" class="toggle-switch" style="width: 24px; height: 24px; background: white; border-radius: 50%; position: absolute; top: 3px; left: 3px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"></div>
+        </div>
+        <span id="yearly-label" style="color: rgba(255,255,255,0.6); font-weight: 600; transition: all 0.3s;">Yearly</span>
+        <span style="background: #f59e0b; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">Save 20%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Architectural Plans Section -->
+  <div style="margin-bottom: 5rem;">
+    <div style="text-align: center; margin-bottom: 3rem;">
+      <div class="section-icon" style="margin: 0 auto 1.5rem;">
+        📐
+      </div>
+      <h2 style="font-size: 2.2rem; color: #1a1a2e; margin-bottom: 1rem; font-weight: 700;">Architectural Plans</h2>
+      <p style="font-size: 1.1rem; color: #666; max-width: 600px; margin: 0 auto;">Professional architectural designs tailored to your project needs</p>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
+      {% for plan in plans %}
+      {% if plan.plan_type %}
+      <div class="pricing-card glass-card" style="border-radius: 20px; padding: 2.5rem; border: {% if plan.featured %}2px solid #0f766e{% else %}1px solid rgba(15, 118, 110, 0.1){% endif %}; position: relative; {% if plan.featured %}transform: scale(1.02);{% endif %} animation-delay: {{ forloop.counter0 }}0.15s;">
+        {% if plan.featured %}
+        <div class="popular-badge" style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #0f766e, #14b8a6); color: white; padding: 0.5rem 1.5rem; border-radius: 25px; font-size: 0.85rem; font-weight: 700; box-shadow: 0 4px 15px rgba(15, 118, 110, 0.4);">✨ Most Popular</div>
+        {% endif %}
+        
+        <h3 style="font-size: 1.7rem; color: #1a1a2e; margin-bottom: 0.5rem; font-weight: 700;">{{ plan.name }}</h3>
+        <p style="color: #666; margin-bottom: 1.5rem; font-size: 1rem; line-height: 1.6;">{{ plan.description }}</p>
+        
+        <div style="margin-bottom: 1.5rem; display: flex; align-items: baseline; padding-bottom: 1.5rem; border-bottom: 2px solid #f0fdfa;">
+          <span style="font-size: 3rem; font-weight: 800; color: #0f766e;">{{ plan.price }}</span>
+          <span style="color: #666; font-size: 1.1rem; margin-left: 0.5rem;">KSH<span style="font-size: 0.9rem; color: #999;">{{ plan.period }}</span></span>
+        </div>
+        
+        <a href="{{ plan.cta_link }}" class="btn-gradient" style="display: block; width: 100%; padding: 1.1rem; color: white; text-decoration: none; border-radius: 12px; text-align: center; font-weight: 600; font-size: 1.05rem; margin-bottom: 1.5rem;">{{ plan.cta }}</a>
+        
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          {% for feature in plan.features %}
+          <li style="padding: 0.9rem 0; border-bottom: 1px solid #f0f0f0; color: #555; display: flex; align-items: center;">
+            <span class="check-icon">✓</span>
+            <span style="margin-left: 0.75rem;">{{ feature }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Membership Plans Section -->
+  <div style="margin-bottom: 5rem;">
+    <div style="text-align: center; margin-bottom: 3rem;">
+      <div class="section-icon" style="margin: 0 auto 1.5rem;">
+        👥
+      </div>
+      <h2 style="font-size: 2.2rem; color: #1a1a2e; margin-bottom: 1rem; font-weight: 700;">Membership Plans</h2>
+      <p style="font-size: 1.1rem; color: #666; max-width: 600px; margin: 0 auto;">Join our network and unlock premium opportunities</p>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 2rem; max-width: 900px; margin: 0 auto;">
+      <!-- Consultant Membership -->
+      <div class="pricing-card glass-card" style="border-radius: 24px; padding: 2.5rem; border: 2px solid rgba(15, 118, 110, 0.2); position: relative; animation-delay: 0.2s;">
+        <div class="ribbon" style="top: 15px; right: -40px; font-size: 0.65rem;">Recommended</div>
+        
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+          <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #8b5cf6, #a78bfa); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">🎓</div>
+          <div>
+            <h3 style="font-size: 1.7rem; color: #1a1a2e; margin-bottom: 0; font-weight: 700;">Consultant</h3>
+            <span style="background: linear-gradient(135deg, #8b5cf6, #a78bfa); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">Professional</span>
+          </div>
+        </div>
+        
+        <p style="color: #666; margin-bottom: 1.5rem; font-size: 1rem; line-height: 1.6;">Join our network of certified consultants and access premium opportunities</p>
+        
+        <div style="margin-bottom: 1.5rem; display: flex; align-items: baseline; padding-bottom: 1.5rem; border-bottom: 2px solid #f5f3ff;">
+          <span style="font-size: 3rem; font-weight: 800; color: #1a1a2e;">2,500</span>
+          <span style="color: #666; font-size: 1.1rem; margin-left: 0.5rem;">KSH<span style="font-size: 0.9rem; color: #999;">/month</span></span>
+        </div>
+        
+        <a href="{% url 'accounts:consultant_application' %}" class="btn-gradient" style="display: block; width: 100%; padding: 1.1rem; color: white; text-decoration: none; border-radius: 12px; text-align: center; font-weight: 600; font-size: 1.05rem; margin-bottom: 1.5rem; background: linear-gradient(135deg, #8b5cf6, #a78bfa);">Apply Now</a>
+        
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          <li style="padding: 0.9rem 0; border-bottom: 1px solid #f5f3ff; color: #555; display: flex; align-items: center;">
+            <span class="check-icon" style="background: linear-gradient(135deg, #8b5cf6, #a78bfa);">✓</span>
+            <span style="margin-left: 0.75rem;">Profile visibility on platform</span>
+          </li>
+          <li style="padding: 0.9rem 0; border-bottom: 1px solid #f5f3ff; color: #555; display: flex; align-items: center;">
+            <span class="check-icon" style="background: linear-gradient(135deg, #8b5cf6, #a78bfa);">✓</span>
+            <span style="margin-left: 0.75rem;">Access to consultation requests</span>
+          </li>
+          <li style="padding: 0.9rem 0; border-bottom: 1px solid #f5f3ff; color: #555; display: flex; align-items: center;">
+            <span class="check-icon" style="background: linear-gradient(135deg, #8b5cf6, #a78bfa);">✓</span>
+            <span style="margin-left: 0.75rem;">Client matching system</span>
+          </li>
+          <li style="padding: 0.9rem 0; border-bottom: 1px solid #f5f3ff; color: #555; display: flex; align-items: center;">
+            <span class="check-icon" style="background: linear-gradient(135deg, #8b5cf6, #a78bfa);">✓</span>
+            <span style="margin-left: 0.75rem;">Consultation scheduling tools</span>
+          </li>
+          <li style="padding: 0.9rem 0; border-bottom: 1px solid #f5f3ff; color: #555; display: flex; align-items: center;">
+            <span class="check-icon" style="background: linear-gradient(135deg, #8b5cf6, #a78bfa);">✓</span>
+            <span style="margin-left: 0.75rem;">Payment processing</span>
+          </li>
+          <li style="padding: 0.9rem 0; color: #555; display: flex; align-items: center;">
+            <span class="check-icon" style="background: linear-gradient(135deg, #8b5cf6, #a78bfa);">✓</span>
+            <span style="margin-left: 0.75rem;">Priority support</span>
+          </li>
+        </ul>
+      </div>
+      
+      <!-- Supplier Membership -->
+      <div class="pricing-card glass-card" style="border-radius: 24px; padding: 2.5rem; border: 2px solid rgba(15, 118, 110, 0.2); position: relative; animation-delay: 0.3s;">
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+          <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #f59e0b, #fbbf24); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">🏭</div>
+          <div>
+            <h3 style="font-size: 1.7rem; color: #1a1a2e; margin-bottom: 0; font-weight: 700;">Supplier</h3>
+            <span style="background: linear-gradient(135deg, #f59e0b, #fbbf24); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">Business</span>
+          </div>
+        </div>
+        
+        <p style="color: #666; margin-bottom: 1.5rem; font-size: 1rem; line-height: 1.6;">Expand your business reach with our supplier network and premium features</p>
+        
+        <div style="margin-bottom: 1.5rem; display: flex; align-items: baseline; padding-bottom: 1.5rem; border-bottom: 2px solid #fffbeb;">
+          <span style="font-size: 3rem; font-weight: 800; color: #1a1a2e;">4,000</span>
+          <span style="color: #666; font-size: 1.1rem; margin-left: 0.5rem;">KSH<span style="font-size: 0.9rem; color: #999;">/month</span></span>
+        </div>
+        
+        <a href="{% url 'accounts:register' %}?role=supplier" class="btn-gradient" style="display: block; width: 100%; padding: 1.1rem; color: white; text-decoration: none; border-radius: 12px; text-align: center; font-weight: 600; font-size: 1.05rem; margin-bottom: 1.5rem; background: linear-gradient(135deg, #f59e0b, #fbbf24);">Become a Supplier</a>
+        
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          <li style="padding: 0.9rem 0; border-bottom: 1px solid #fffbeb; color: #555; display: flex; align-items: center;">
+            <span class="check-icon" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);">✓</span>
+            <span style="margin-left: 0.75rem;">Enhanced product listings</span>
+          </li>
+          <li style="padding: 0.9rem 0; border-bottom: 1px solid #fffbeb; color: #555; display: flex; align-items: center;">
+            <span class="check-icon" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);">✓</span>
+            <span style="margin-left: 0.75rem;">Priority in search results</span>
+          </li>
+          <li style="padding: 0.9rem 0; border-bottom: 1px solid #fffbeb; color: #555; display: flex; align-items: center;">
+            <span class="check-icon" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);">✓</span>
+            <span style="margin-left: 0.75rem;">Bulk order management</span>
+          </li>
+          <li style="padding: 0.9rem 0; border-bottom: 1px solid #fffbeb; color: #555; display: flex; align-items: center;">
+            <span class="check-icon" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);">✓</span>
+            <span style="margin-left: 0.75rem;">Advanced analytics dashboard</span>
+          </li>
+          <li style="padding: 0.9rem 0; border-bottom: 1px solid #fffbeb; color: #555; display: flex; align-items: center;">
+            <span class="check-icon" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);">✓</span>
+            <span style="margin-left: 0.75rem;">Direct customer communication</span>
+          </li>
+          <li style="padding: 0.9rem 0; color: #555; display: flex; align-items: center;">
+            <span class="check-icon" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);">✓</span>
+            <span style="margin-left: 0.75rem;">Marketing tools</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ Section -->
+  <div style="background: white; padding: 3.5rem; border-radius: 24px; margin-bottom: 4rem; box-shadow: 0 10px 40px rgba(15, 118, 110, 0.1); animation: fadeInUp 0.8s ease-out 0.2s backwards;">
+    <div style="text-align: center; margin-bottom: 2.5rem;">
+      <h2 style="font-size: 2rem; color: #1a1a2e; margin-bottom: 1rem; font-weight: 700;">❓ Frequently Asked Questions</h2>
+      <p style="font-size: 1.1rem; color: #666;">Got questions? We've got answers.</p>
+    </div>
+    
+    <div style="max-width: 800px; margin: 0 auto;">
+      <!-- FAQ Item 1 -->
+      <div class="faq-item" style="background: #f8fafc; padding: 1.5rem; border-radius: 16px; margin-bottom: 1rem;" onclick="toggleFaq(this)">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h3 style="color: #1a1a2e; margin: 0; font-weight: 600; font-size: 1.1rem;">Do you offer custom pricing?</h3>
+          <span class="faq-icon" style="color: #0f766e; font-size: 1.2rem;">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p style="color: #666; margin-top: 0;">Yes! For organizations with larger teams, we offer custom KSH pricing. <a href="{% url 'accounts:contact' %}" style="color: #0f766e; text-decoration: none; font-weight: 600;">Contact us</a> for a personalized quote.</p>
+        </div>
+      </div>
+      
+      <!-- FAQ Item 2 -->
+      <div class="faq-item" style="background: #f8fafc; padding: 1.5rem; border-radius: 16px; margin-bottom: 1rem;" onclick="toggleFaq(this)">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h3 style="color: #1a1a2e; margin: 0; font-weight: 600; font-size: 1.1rem;">Can I change my plan later?</h3>
+          <span class="faq-icon" style="color: #0f766e; font-size: 1.2rem;">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p style="color: #666; margin-top: 0;">Yes! Upgrade or downgrade anytime. Changes take effect on your next billing cycle with no penalties.</p>
+        </div>
+      </div>
+      
+      <!-- FAQ Item 3 -->
+      <div class="faq-item" style="background: #f8fafc; padding: 1.5rem; border-radius: 16px; margin-bottom: 1rem;" onclick="toggleFaq(this)">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h3 style="color: #1a1a2e; margin: 0; font-weight: 600; font-size: 1.1rem;">What payment methods do you accept?</h3>
+          <span class="faq-icon" style="color: #0f766e; font-size: 1.2rem;">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p style="color: #666; margin-top: 0;">We accept M-Pesa, bank transfers, and major credit cards. All payments are processed securely in KSH.</p>
+        </div>
+      </div>
+      
+      <!-- FAQ Item 4 -->
+      <div class="faq-item" style="background: #f8fafc; padding: 1.5rem; border-radius: 16px;" onclick="toggleFaq(this)">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h3 style="color: #1a1a2e; margin: 0; font-weight: 600; font-size: 1.1rem;">Is there a refund policy?</h3>
+          <span class="faq-icon" style="color: #0f766e; font-size: 1.2rem;">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p style="color: #666; margin-top: 0;">Yes, we offer a 30-day money-back guarantee on all our plans. No questions asked.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA Section -->
+  <div class="cta-gradient" style="border-radius: 24px; padding: 5rem 3rem; text-align: center; position: relative; overflow: hidden; animation: fadeInUp 0.8s ease-out 0.3s backwards;">
+    <!-- Decorative elements -->
+    <div class="floating-shape" style="width: 250px; height: 250px; background: #0f766e; top: -80px; left: -80px;"></div>
+    <div class="floating-shape" style="width: 180px; height: 180px; background: #14b8a6; bottom: -50px; right: -50px; animation-delay: 1.5s;"></div>
+    <div class="floating-shape" style="width: 80px; height: 80px; background: #f59e0b; top: 20%; left: 15%; animation-delay: 0.5s;"></div>
+    
+    <div style="position: relative; z-index: 1;">
+      <!-- Trust Badges -->
+      <div style="display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 2rem; flex-wrap: wrap;">
+        <div class="trust-badge" style="padding: 0.75rem 1.5rem; border-radius: 50px; display: flex; align-items: center; gap: 0.5rem;">
+          <span style="font-size: 1.2rem;">🔒</span>
+          <span style="color: #0f766e; font-weight: 600; font-size: 0.9rem;">Secure Payment</span>
+        </div>
+        <div class="trust-badge" style="padding: 0.75rem 1.5rem; border-radius: 50px; display: flex; align-items: center; gap: 0.5rem;">
+          <span style="font-size: 1.2rem;">💯</span>
+          <span style="color: #0f766e; font-weight: 600; font-size: 0.9rem;">30-Day Guarantee</span>
+        </div>
+        <div class="trust-badge" style="padding: 0.75rem 1.5rem; border-radius: 50px; display: flex; align-items: center; gap: 0.5rem;">
+          <span style="font-size: 1.2rem;">⚡</span>
+          <span style="color: #0f766e; font-weight: 600; font-size: 0.9rem;">Instant Access</span>
+        </div>
+      </div>
+      
+      <h2 style="font-size: 2.5rem; color: white; margin-bottom: 1rem; font-weight: 700;">Ready to Get Started?</h2>
+      <p style="font-size: 1.2rem; margin-bottom: 2.5rem; opacity: 0.9; max-width: 500px; margin-left: auto; margin-right: auto;">All pricing in KSH. No hidden fees. Cancel anytime. Join thousands of satisfied customers.</p>
+      
+      <a href="{% url 'accounts:register' %}" class="btn-gradient" style="display: inline-block; padding: 1.2rem 3.5rem; color: white; text-decoration: none; border-radius: 50px; font-weight: 700; font-size: 1.15rem; margin-bottom: 2rem;">
+        Get Started Today 🚀
+      </a>
+      
+      <!-- Testimonial Style Quote -->
+      <div style="background: rgba(255,255,255,0.1); padding: 1.5rem 2rem; border-radius: 16px; max-width: 500px; margin: 0 auto; backdrop-filter: blur(10px);">
+        <p style="color: white; font-style: italic; font-size: 1rem; margin-bottom: 1rem; opacity: 0.95;">"Construction Hub transformed how we manage our projects. The platform is intuitive and the support is outstanding!"</p>
+        <div style="display: flex; align-items: center; justify-content: center; gap: 0.75rem;">
+          <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #14b8a6, #2dd4bf); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">JD</div>
+          <div style="text-align: left;">
+            <p style="color: white; font-weight: 600; margin: 0; font-size: 0.95rem;">John Doe</p>
+            <p style="color: rgba(255,255,255,0.7); margin: 0; font-size: 0.85rem;">Construction Manager</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function togglePricing() {
+    const knob = document.getElementById('toggle-knob');
+    const monthlyLabel = document.getElementById('monthly-label');
+    const yearlyLabel = document.getElementById('yearly-label');
+    
+    knob.classList.toggle('active');
+    
+    if (knob.classList.contains('active')) {
+      monthlyLabel.style.color = 'rgba(255,255,255,0.6)';
+      yearlyLabel.style.color = 'white';
+    } else {
+      monthlyLabel.style.color = 'white';
+      yearlyLabel.style.color = 'rgba(255,255,255,0.6)';
+    }
+  }
+  
+  function toggleFaq(element) {
+    // Close other FAQs
+    document.querySelectorAll('.faq-item').forEach(item => {
+      if (item !== element) {
+        item.classList.remove('active');
+      }
+    });
+    
+    // Toggle current FAQ
+    element.classList.toggle('active');
+  }
+</script>
+{% endblock %}

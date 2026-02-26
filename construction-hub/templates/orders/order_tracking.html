@@ -1,0 +1,522 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+.tracking-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+.tracking-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.tracking-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1f4788;
+    margin: 0;
+}
+
+.back-link {
+    color: #1f4788;
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+.order-info-card {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.order-info-card h3 {
+    margin-top: 0;
+    color: #333;
+    font-size: 1.2rem;
+}
+
+.order-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.info-item {
+    text-align: center;
+}
+
+.info-label {
+    font-size: 0.8rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.status-saved { background: #e3f2fd; color: #1976d2; }
+.status-pending_payment { background: #fff3cd; color: #856404; }
+.status-paid { background: #d4edda; color: #155724; }
+.status-shipped { background: #cce5ff; color: #004085; }
+.status-complete_waiting_transport { background: #e2e3e5; color: #383d41; }
+.status-completed { background: #d4edda; color: #155724; }
+.status-canceled { background: #f8d7da; color: #721c24; }
+
+/* Progress Tracker */
+.progress-tracker {
+    display: flex;
+    justify-content: space-between;
+    margin: 2rem 0;
+    position: relative;
+}
+
+.progress-tracker::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #e9ecef;
+    z-index: 0;
+}
+
+.progress-tracker-fill {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #28a745, #20c997);
+    z-index: 1;
+    transition: width 0.5s ease;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    flex: 1;
+}
+
+.step-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #6c757d;
+    transition: all 0.3s ease;
+}
+
+.step.active .step-icon {
+    border-color: #28a745;
+    background: #28a745;
+    color: white;
+    box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.2);
+}
+
+.step.completed .step-icon {
+    border-color: #28a745;
+    background: #28a745;
+    color: white;
+}
+
+.step-label {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #6c757d;
+    text-align: center;
+}
+
+.step.active .step-label {
+    color: #28a745;
+}
+
+.step.completed .step-label {
+    color: #28a745;
+}
+
+.step-description {
+    font-size: 0.75rem;
+    color: #999;
+    text-align: center;
+    margin-top: 0.25rem;
+}
+
+/* Message Section */
+.message-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.supplier-card {
+    background: linear-gradient(135deg, #e8f4f8, #d4e9f7);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.supplier-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1f4788, #3a6ea5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.supplier-details {
+    flex: 1;
+}
+
+.supplier-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.supplier-company {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0.25rem 0;
+}
+
+.btn-message {
+    background: #1f4788;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-message:hover {
+    background: #3a6ea5;
+    transform: translateY(-2px);
+}
+
+.no-supplier {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+    background: #f8f9fa;
+    border-radius: 12px;
+}
+
+/* Live indicator */
+.live-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #28a745;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.live-dot {
+    width: 8px;
+    height: 8px;
+    background: #28a745;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* Action buttons */
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-primary {
+    background: #1f4788;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #3a6ea5;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background: #28a745;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #218838;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .progress-tracker {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .progress-tracker::before,
+    .progress-tracker-fill {
+        display: none;
+    }
+    
+    .step {
+        flex-direction: row;
+        gap: 1rem;
+    }
+    
+    .step-label {
+        text-align: left;
+    }
+}
+</style>
+
+<div class="tracking-container">
+    <div class="tracking-header">
+        <h1 class="tracking-title">Order Tracking</h1>
+        <a href="{% url 'orders:order_list' %}" class="back-link">
+            ← Back to Orders
+        </a>
+    </div>
+    
+    <div class="order-info-card">
+        <h3>Order #{{ order.order_number }}</h3>
+        <div class="order-info-grid">
+            <div class="info-item">
+                <div class="info-label">Status</div>
+                <div class="info-value">
+                    <span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span>
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Product</div>
+                <div class="info-value">{{ order.product.name|default:"Plan Purchase" }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Quantity</div>
+                <div class="info-value">{{ order.quantity }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Total Amount</div>
+                <div class="info-value">KSH {{ order.total_cost }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Ordered On</div>
+                <div class="info-value">{{ order.created_at|date:"M d, Y" }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Last Updated</div>
+                <div class="info-value">
+                    {{ order.updated_at|date:"M d, Y H:i" }}
+                    <span class="live-indicator">
+                        <span class="live-dot"></span>
+                        Live
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <h3 style="margin-bottom: 1.5rem;">Order Progress</h3>
+    
+    <!-- Progress Tracker -->
+    <div class="progress-tracker">
+        {% with total_steps=tracking_steps|length|add:0|default:1 %}
+        <div class="progress-tracker-fill" style="width: {% widthratio current_step_index total_steps 100 %}%;"></div>
+        
+        {% for step in tracking_steps %}
+        <div class="step {% if forloop.counter0 < current_step_index %}completed{% elif forloop.counter0 == current_step_index %}active{% endif %}">
+            <div class="step-icon">
+                {% if forloop.counter0 < current_step_index %}✓{% else %}{{ forloop.counter }}{% endif %}
+            </div>
+            <div class="step-label">{{ step.label }}</div>
+            <div class="step-description">{{ step.description }}</div>
+        </div>
+        {% endfor %}
+        {% endwith %}
+    </div>
+    
+    <!-- Message Supplier Section -->
+    <div class="message-section">
+        <h3>Contact Supplier</h3>
+        
+        {% if order.product and order.product.supplier %}
+        <div class="supplier-card">
+            <div class="supplier-avatar">
+                {{ order.product.supplier.company_name|default:order.product.supplier.user.username|make_list|first|upper }}
+            </div>
+            <div class="supplier-details">
+                <h4 class="supplier-name">{{ order.product.supplier.user.username }}</h4>
+                <p class="supplier-company">{{ order.product.supplier.company_name|default:"Supplier" }}</p>
+            </div>
+            {% if conversation %}
+            <a href="{% url 'messaging:conversation_detail' conversation.id %}" class="btn-message">
+                💬 View Conversation
+            </a>
+            {% else %}
+<button class="btn-message" onclick="messageSupplier(event, '{{ order.id }}', '{{ order.order_number }}')">
+                💬 Message Supplier
+            </button>
+            {% endif %}
+        </div>
+        {% else %}
+        <div class="no-supplier">
+            <p>No supplier associated with this order.</p>
+            {% if order.plan_type %}
+            <p>This is a plan purchase order.</p>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        {% if order.status == 'saved' or order.status == 'pending_payment' %}
+        <a href="{% url 'orders:payment' order.id %}" class="btn btn-success">
+            💳 Complete Payment
+        </a>
+        {% endif %}
+        
+        {% if order.status == 'paid' %}
+        <button class="btn btn-secondary" onclick="refreshStatus()">
+            🔄 Refresh Status
+        </button>
+        {% endif %}
+        
+        <a href="{% url 'orders:order_list' %}" class="btn btn-secondary">
+            ← Back to Orders
+        </a>
+    </div>
+</div>
+
+<script>
+// Real-time status refresh
+function refreshStatus() {
+    fetch('/orders/api/{{ order.id }}/status/', {
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+// Auto-refresh every 30 seconds
+setInterval(refreshStatus, 30000);
+
+// Message supplier function
+function messageSupplier(event, orderId, orderNumber) {
+    fetch('/messaging/api/conversations/create/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({
+            order_id: orderId,
+            message: 'Hello, I would like to discuss my order ' + orderNumber
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = '/messaging/conversation/' + data.conversation_id + '/';
+        } else {
+            alert('Error: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to start conversation');
+    });
+}
+</script>
+
+{% endblock %}

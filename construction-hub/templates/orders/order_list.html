@@ -1,0 +1,630 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+.order-list {
+  display: grid;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.order-card {
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.order-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f8f9fa;
+}
+
+.order-number {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1f4788;
+  margin: 0;
+}
+
+.order-date {
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.order-content {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.product-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 2px solid #e9ecef;
+}
+
+.product-image-placeholder {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #ff7f31, #ff9a5e);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  border: 2px solid #e9ecef;
+}
+
+.product-details h4 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.product-details p {
+  margin: 0.25rem 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.order-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.meta-item {
+  text-align: center;
+}
+
+.meta-label {
+  font-size: 0.8rem;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.25rem;
+}
+
+.meta-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.supplier-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: linear-gradient(135deg, #e8f4f8, #d4e9f7);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.supplier-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1f4788, #3a6ea5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.supplier-details {
+  flex: 1;
+}
+
+.supplier-name {
+  font-weight: 600;
+  color: #1f4788;
+  font-size: 0.95rem;
+}
+
+.supplier-company {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-saved { background: #ffc107; color: #212529; }
+.status-pending_payment { background: #fd7e14; color: white; }
+.status-paid { background: #17a2b8; color: white; }
+.status-shipped { background: #007bff; color: white; }
+.status-complete_waiting_transport { background: #e83e8c; color: white; }
+.status-completed { background: #28a745; color: white; }
+.status-canceled { background: #dc3545; color: white; }
+
+.order-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+}
+
+.btn-primary {
+  background: #1f4788;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #16325c;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #545b62;
+  transform: translateY(-1px);
+}
+
+.btn-success {
+  background: #28a745;
+  color: white;
+}
+
+.btn-success:hover {
+  background: #218838;
+  transform: translateY(-1px);
+}
+
+.btn-info {
+  background: #17a2b8;
+  color: white;
+}
+
+.btn-info:hover {
+  background: #138496;
+  transform: translateY(-1px);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: #6c757d;
+}
+
+.empty-state h3 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.empty-state p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.page-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.page-header h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.page-header p {
+  margin: 0;
+  opacity: 0.9;
+  font-size: 1.1rem;
+}
+
+.stats-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.stat-card .stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f4788;
+  margin-bottom: 0.5rem;
+}
+
+.stat-card .stat-label {
+  color: #6c757d;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Real-time status indicator */
+.status-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: #28a745;
+}
+
+.status-live-dot {
+  width: 8px;
+  height: 8px;
+  background: #28a745;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+/* Loading spinner */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #1f4788;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Message button with notification badge */
+.message-btn {
+  position: relative;
+}
+
+.unread-indicator {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 18px;
+  height: 18px;
+  background: #ff4757;
+  color: white;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+</style>
+
+<div class="page-header">
+  <h1>📋 My Orders</h1>
+  <p>Track and manage all your construction project orders</p>
+</div>
+
+<!-- Order Statistics -->
+<div class="stats-summary">
+  <div class="stat-card">
+    <div class="stat-number">{{ orders|length }}</div>
+    <div class="stat-label">Total Orders</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">{{ orders|length|add:"0" }}</div>
+    <div class="stat-label">Active Orders</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">KSH {% widthratio orders|length 1 1000 %}</div>
+    <div class="stat-label">Est. Total Value</div>
+  </div>
+</div>
+
+{% if orders %}
+  <div class="order-list">
+    {% for order in orders %}
+      <div class="order-card">
+        <div class="order-header">
+          <div>
+            <h2 class="order-number">{{ order.order_number|default:order.id }}</h2>
+            <p class="order-date">Ordered on {{ order.created_at|date:"F j, Y" }} at {{ order.created_at|time:"g:i A" }}</p>
+          </div>
+          <div class="status-badge status-{{ order.status }}">
+            {{ order.get_status_display }}
+          </div>
+        </div>
+
+        <div class="order-content">
+          <div class="product-image-container">
+            {% if order.product and order.product.image_url %}
+              <img src="{{ order.product.image_url }}" alt="{{ order.product.name }}" class="product-image">
+            {% else %}
+              <div class="product-image-placeholder">📦</div>
+            {% endif %}
+          </div>
+
+          <div class="product-details">
+            <h4>{{ order.product.name|default:"Plan Purchase" }}</h4>
+            {% if order.product %}
+              <p><strong>Category:</strong> {{ order.product.get_category_display|default:"Construction Material" }}</p>
+            {% endif %}
+            <p><strong>Quantity:</strong> {{ order.quantity }}</p>
+            {% if order.price %}
+              <p><strong>Unit Price:</strong> KSH {{ order.price|floatformat:2 }}</p>
+              <p><strong>Total:</strong> KSH {{ order.total_cost|floatformat:2 }}</p>
+            {% endif %}
+          </div>
+        </div>
+
+        {% if order.customer_name or order.customer_number or order.customer_location %}
+          <div class="order-meta">
+            {% if order.customer_name %}
+              <div class="meta-item">
+                <div class="meta-label">Customer</div>
+                <div class="meta-value">{{ order.customer_name }}</div>
+              </div>
+            {% endif %}
+            {% if order.customer_number %}
+              <div class="meta-item">
+                <div class="meta-label">Phone</div>
+                <div class="meta-value">{{ order.customer_number }}</div>
+              </div>
+            {% endif %}
+            {% if order.customer_location %}
+              <div class="meta-item">
+                <div class="meta-label">Location</div>
+                <div class="meta-value">{{ order.customer_location }}</div>
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        <div class="order-actions">
+          <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-primary">View Details</a>
+          {% if order.status == 'saved' or order.status == 'pending_payment' %}
+            <a href="{% url 'orders:payment' order.id %}" class="btn btn-secondary">Complete Payment</a>
+          {% endif %}
+          <a href="{% url 'orders:order_tracking' order.id %}" class="btn btn-info">
+            <span class="status-live-dot"></span> Track Order
+          </a>
+          {% if order.has_supplier and order.id %}
+<button class="btn btn-primary message-btn" onclick="messageSupplier(event, '{{ order.id }}', '{{ order.order_number|default:order.id }}')">
+              💬 Message Supplier
+              {% if order.supplier_unread_count > 0 %}
+                <span class="unread-indicator">{{ order.supplier_unread_count }}</span>
+              {% endif %}
+            </button>
+          {% else %}
+            <span class="btn btn-secondary" style="opacity: 0.6; cursor: not-allowed;" title="No supplier associated with this order">💬 No Supplier</span>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="empty-state">
+    <h3>No Orders Yet</h3>
+    <p>You haven't placed any orders yet. Start your construction project by browsing our products!</p>
+    <a href="{% url 'products:product_list' %}" class="btn btn-primary" style="display: inline-block; margin-top: 1rem;">Browse Products</a>
+  </div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<!-- Tracking Modal -->
+<div id="trackingModal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
+  <div style="background-color: white; margin: 10% auto; padding: 2rem; border-radius: 12px; max-width: 500px;">
+    <h2 style="margin-top: 0;">Order Tracking</h2>
+    <p><strong>Order #:</strong> <span id="trackOrderNumber"></span></p>
+    <p><strong>Status:</strong> <span id="trackStatus"></span></p>
+    <div id="trackingSteps" style="margin-top:1rem;"></div>
+    <button onclick="closeTrackingModal()" class="btn btn-primary" style="margin-top:auto;">Close</button>
+  </div>
+</div>
+
+<script src="{% static 'js/tracking.js' %}"></script>
+
+<script>
+// Fallback inline tracking if static file not available
+function showTrackingModal(orderId, orderNumber, status, statusDisplay) {
+ document.getElementById('trackOrderNumber').textContent = orderNumber;
+ document.getElementById('trackStatus').textContent = statusDisplay;
+ const steps = [
+   {key:'saved',label:'Saved'},
+   {key:'pending_payment',label:'Pending Payment'},
+   {key:'paid',label:'Paid'},
+   {key:'shipped',label:'Shipped'},
+   {key:'complete_waiting_transport',label:'Awaiting Transport'},
+   {key:'completed',label:'Completed'}
+ ];
+ const idx = steps.findIndex(s=>s.key===status);
+ let html='';
+ steps.forEach((s,i)=>{
+   const done=i<=idx;
+   const current=i===idx;
+   html+=`<div style="${done?'color:#28a745;font-weight:600':'color:#999'}; ${current?'border-left:3px solid #17a2b8;padding-left:8px;background:#f8f9fa;border-radius:4px;':''}">
+     ${done?'✓':'○'} ${s.label}${current?' (Current)':''}
+   </div>`;
+ });
+ document.getElementById('trackingSteps').innerHTML=html;
+ document.getElementById('trackingModal').style.display='block';
+ 
+ // Auto-refresh tracking info every 30 seconds
+ if (window.trackingInterval) clearInterval(window.trackingInterval);
+ window.trackingInterval = setInterval(() => {
+   refreshOrderStatus(orderId, orderNumber);
+ }, 30000);
+}
+
+function closeTrackingModal(){
+  document.getElementById('trackingModal').style.display='none';
+  if (window.trackingInterval) {
+    clearInterval(window.trackingInterval);
+    window.trackingInterval = null;
+  }
+}
+window.onclick=e=>{if(e.target.id==='trackingModal')closeTrackingModal();}
+
+// Track order function - fetches real-time status and shows modal
+function trackOrder(orderId, orderNumber, currentStatus) {
+    // Fetch latest status from API
+    fetch('/orders/api/' + orderId + '/status/', {
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showTrackingModal(orderId, data.order_number || orderNumber, data.status, data.status_display);
+        } else {
+            // Fallback to current status if API fails
+            showTrackingModal(orderId, orderNumber, currentStatus, currentStatus.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()));
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching order status:', error);
+        // Fallback to current status
+        showTrackingModal(orderId, orderNumber, currentStatus, currentStatus.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()));
+    });
+}
+
+// Refresh order status in real-time
+function refreshOrderStatus(orderId, orderNumber) {
+  fetch('/orders/api/' + orderId + '/status/', {
+    headers: {
+      'X-CSRFToken': '{{ csrf_token }}'
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // Update status badge if changed
+      const statusBadge = document.querySelector('.status-' + data.status);
+      if (statusBadge) {
+        statusBadge.textContent = data.status_display;
+        statusBadge.className = 'status-badge status-' + data.status;
+      }
+      // Update tracking modal if open
+      const trackStatus = document.getElementById('trackStatus');
+      if (trackStatus) {
+        trackStatus.textContent = data.status_display;
+        showTrackingModal(orderId, orderNumber, data.status, data.status_display);
+      }
+    }
+  })
+  .catch(error => console.error('Error refreshing status:', error));
+}
+
+// Message supplier function
+function messageSupplier(event, orderId, orderNumber) {
+    // Show loading state
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = 'Loading...';
+    btn.disabled = true;
+    
+    fetch('/messaging/api/conversations/create/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({
+            order_id: orderId,
+            message: 'Hello, I would like to discuss my order ' + orderNumber
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        if (data.success) {
+            window.location.href = '/messaging/conversation/' + data.conversation_id + '/';
+        } else {
+            alert('Unable to message supplier: ' + data.error + '\n\nThis may be because this order does not have a supplier associated with it.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        alert('Failed to start conversation. Please try again or contact support.');
+    });
+}
+
+// Real-time polling for order status updates (every 30 seconds)
+document.addEventListener('DOMContentLoaded', function() {
+  const orderIds = [{% for order in orders %}'{{ order.id }}'{% if not forloop.last %}, {% endif %}{% endfor %}];
+  
+  // Only poll if there are active orders (not completed or canceled)
+  if (orderIds.length > 0) {
+    setInterval(function() {
+      orderIds.forEach(orderId => {
+        refreshOrderStatus(orderId, '');
+      });
+    }, 30000); // 30 seconds
+  }
+});
+</script>
+
+<style>#trackingSteps div{padding:.25rem;font-size:.9rem}</style>
+
+{% endblock %}

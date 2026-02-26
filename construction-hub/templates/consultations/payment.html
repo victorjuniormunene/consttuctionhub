@@ -1,0 +1,341 @@
+{% extends "base.html" %}
+
+{% block title %}Pay for Consultation - Construction Hub{% endblock %}
+
+{% block content %}
+<style>
+    .payment-container {
+        max-width: 600px;
+        margin: 2rem auto;
+    }
+    
+    .payment-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 12px 12px 0 0;
+        text-align: center;
+    }
+    
+    .payment-header h1 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.8rem;
+    }
+    
+    .payment-header p {
+        margin: 0;
+        opacity: 0.95;
+    }
+    
+    .payment-body {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-top: none;
+        border-radius: 0 0 12px 12px;
+        padding: 2rem;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    
+    .consultant-card {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .consultant-card h3 {
+        margin: 0 0 1rem 0;
+        color: #1e293b;
+        font-size: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .consultant-info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+    
+    .info-item {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .info-label {
+        font-size: 0.75rem;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.25rem;
+    }
+    
+    .info-value {
+        font-weight: 600;
+        color: #1e293b;
+    }
+    
+    .info-value.rate {
+        color: #059669;
+        font-size: 1.25rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #374151;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 0.875rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+        color: #9ca3af;
+    }
+    
+    .form-hint {
+        font-size: 0.875rem;
+        color: #6b7280;
+        margin-top: 0.5rem;
+    }
+    
+    .payment-note {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        border-left: 4px solid #f59e0b;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+    }
+    
+    .payment-note p {
+        margin: 0;
+        color: #92400e;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .button-group {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+    
+    .btn-pay {
+        flex: 2;
+        padding: 1rem;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+    
+    .btn-pay:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+    }
+    
+    .btn-cancel {
+        flex: 1;
+        padding: 1rem;
+        background: #f3f4f6;
+        color: #6b7280;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1rem;
+        text-decoration: none;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-cancel:hover {
+        background: #e5e7eb;
+        color: #374151;
+    }
+    
+    .how-it-works {
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e5e7eb;
+    }
+    
+    .how-it-works h4 {
+        margin: 0 0 1rem 0;
+        color: #374151;
+        font-size: 1rem;
+    }
+    
+    .steps-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        counter-reset: step;
+    }
+    
+    .steps-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        padding: 0.5rem 0;
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+    
+    .steps-list li::before {
+        counter-increment: step;
+        content: counter(step);
+        background: #667eea;
+        color: white;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 600;
+        flex-shrink: 0;
+    }
+    
+    .secure-badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 1.5rem;
+        padding: 0.75rem;
+        background: #ecfdf5;
+        border-radius: 8px;
+        color: #059669;
+        font-size: 0.875rem;
+    }
+</style>
+
+<div class="payment-container">
+    <div class="payment-header">
+        <h1>💳 Complete Your Payment</h1>
+        <p>Secure payment for your consultation booking</p>
+    </div>
+    
+    <div class="payment-body">
+        <!-- Consultant Details Card -->
+        <div class="consultant-card">
+            <h3>📋 Consultation Details</h3>
+            <div class="consultant-info-grid">
+                <div class="info-item">
+                    <span class="info-label">Consultant</span>
+                    <span class="info-value">{{ consultant.full_name }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Specialization</span>
+                    <span class="info-value">{{ consultant.specialization|default:"General Consulting" }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Consultation Rate</span>
+                    <span class="info-value rate">KSH {{ consultant.consultation_rate }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Phone</span>
+                    <span class="info-value">{{ consultant.phone }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Form -->
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="phone_number">
+                    📱 M-Pesa Phone Number
+                </label>
+                <input 
+                    type="tel" 
+                    name="phone_number" 
+                    id="phone_number"
+                    placeholder="e.g., 254712345678"
+                    required
+                >
+                <p class="form-hint">Enter the phone number registered with M-Pesa (start with 254)</p>
+            </div>
+
+            <div class="form-group">
+                <label for="details">
+                    📝 Additional Notes (Optional)
+                </label>
+                <textarea 
+                    name="details" 
+                    id="details"
+                    rows="3"
+                    placeholder="Any specific topics or questions you'd like to discuss..."
+                ></textarea>
+            </div>
+
+            <div class="payment-note">
+                <p>
+                    <span>⚠️</span>
+                    You will receive an STK push prompt on your phone. Please enter your M-Pesa PIN to complete the payment. Do not close this page until payment is confirmed.
+                </p>
+            </div>
+
+            <div class="button-group">
+                <a href="{% url 'consultations:select_consultant' %}" class="btn-cancel">
+                    ← Cancel
+                </a>
+                <button type="submit" class="btn-pay">
+                    💰 Pay with M-Pesa
+                </button>
+            </div>
+        </form>
+
+        <!-- How It Works -->
+        <div class="how-it-works">
+            <h4>How the Payment Works:</h4>
+            <ol class="steps-list">
+                <li>Enter your M-Pesa registered phone number above</li>
+                <li>Click "Pay with M-Pesa" button</li>
+                <li>You will receive an STK push notification on your phone</li>
+                <li>Enter your M-Pesa PIN to confirm payment</li>
+                <li>Once payment is confirmed, the consultant will be notified</li>
+            </ol>
+        </div>
+
+        <!-- Secure Badge -->
+        <div class="secure-badge">
+            🔒 Your payment is secured with M-Pesa
+        </div>
+    </div>
+</div>
+{% endblock %}

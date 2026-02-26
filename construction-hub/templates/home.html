@@ -1,0 +1,872 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+  /* Global Styles */
+  :root {
+    --primary-color: #ff7f31;
+    --secondary-color: #0d6efd;
+    --accent-color: #28a745;
+    --dark-bg: #1a1a2e;
+    --light-bg: #f8f9fa;
+    --text-dark: #333;
+    --text-light: #666;
+    --shadow: 0 4px 20px rgba(0,0,0,0.1);
+    --shadow-hover: 0 8px 30px rgba(255,127,49,0.2);
+  }
+
+  /* Animations */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-50px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes slideInRight {
+    from { opacity: 0; transform: translateX(50px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  /* Hero Section */
+  .hero {
+    background: linear-gradient(135deg, rgba(26,26,46,0.9) 0%, rgba(22,33,62,0.8) 50%, rgba(255,127,49,0.1) 100%),
+                url('{% static "images/home page.jpg" %}');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: white;
+    padding: 8rem 0 6rem;
+    position: relative;
+    overflow: hidden;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 80%, rgba(255,127,49,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255,127,49,0.1) 0%, transparent 50%);
+    animation: pulse 4s ease-in-out infinite;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, #fff 0%, #ffe4c4 50%, #ff7f31 100%);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 3s ease infinite;
+    text-shadow: 0 0 30px rgba(255, 127, 49, 0.3);
+  }
+
+  .hero p {
+    font-size: 1.3rem;
+    margin-bottom: 3rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+  }
+
+  .hero-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary, .btn-secondary {
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+    font-size: 1.1rem;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #ff7f31 0%, #ff9a5e 50%, #ff4500 100%);
+    background-size: 200% 200%;
+    color: white;
+    animation: gradientShift 3s ease infinite;
+    box-shadow: 0 8px 25px rgba(255,127,49,0.4);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(255,127,49,0.6);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+  }
+
+  .btn-secondary:hover {
+    background: white;
+    color: #ff7f31;
+    transform: translateY(-3px);
+  }
+
+  /* Stats Section */
+  .stats {
+    background: white;
+    padding: 4rem 0;
+    margin-top: -2rem;
+    position: relative;
+    z-index: 3;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .stat-card {
+    background: linear-gradient(135deg, rgba(255,127,49,0.1) 0%, rgba(255,154,94,0.1) 100%);
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255,127,49,0.2);
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+
+  .stat-card:nth-child(1) { animation-delay: 0.1s; }
+  .stat-card:nth-child(2) { animation-delay: 0.2s; }
+  .stat-card:nth-child(3) { animation-delay: 0.3s; }
+  .stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+  .stat-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .stat-number {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-description {
+    color: var(--text-light);
+    font-size: 0.95rem;
+  }
+
+  /* Features Section */
+  .features {
+    background: var(--light-bg);
+    padding: 6rem 0;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .section-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+  }
+
+  .section-header p {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    line-height: 1.6;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .feature-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+    text-align: center;
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+
+  .feature-card:nth-child(1) { animation-delay: 0.1s; }
+  .feature-card:nth-child(2) { animation-delay: 0.2s; }
+  .feature-card:nth-child(3) { animation-delay: 0.3s; }
+  .feature-card:nth-child(4) { animation-delay: 0.4s; }
+  .feature-card:nth-child(5) { animation-delay: 0.5s; }
+  .feature-card:nth-child(6) { animation-delay: 0.6s; }
+
+  .feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+
+  .feature-card h3 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+  }
+
+  .feature-card p {
+    color: var(--text-light);
+    line-height: 1.6;
+  }
+
+  /* How It Works */
+  .how-it-works {
+    background: white;
+    padding: 6rem 0;
+  }
+
+  .steps-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .step {
+    text-align: center;
+    padding: 2rem;
+    background: var(--light-bg);
+    border-radius: 15px;
+    position: relative;
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+
+  .step:nth-child(1) { animation-delay: 0.1s; }
+  .step:nth-child(2) { animation-delay: 0.2s; }
+  .step:nth-child(3) { animation-delay: 0.3s; }
+
+  .step-number {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 auto 1.5rem;
+    box-shadow: 0 8px 25px rgba(255,127,49,0.3);
+  }
+
+  .step h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+  }
+
+  .step p {
+    color: var(--text-light);
+    line-height: 1.6;
+  }
+
+  /* Featured Products */
+  .featured-products {
+    background: var(--light-bg);
+    padding: 6rem 0;
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .product-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+
+  .product-card:nth-child(1) { animation-delay: 0.1s; }
+  .product-card:nth-child(2) { animation-delay: 0.2s; }
+  .product-card:nth-child(3) { animation-delay: 0.3s; }
+  .product-card:nth-child(4) { animation-delay: 0.4s; }
+  .product-card:nth-child(5) { animation-delay: 0.5s; }
+  .product-card:nth-child(6) { animation-delay: 0.6s; }
+
+  .product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .product-image {
+    height: 200px;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: var(--primary-color);
+  }
+
+  .product-content {
+    padding: 1.5rem;
+  }
+
+  .product-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+  }
+
+  .product-price {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+  }
+
+  .product-description {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  /* CTA Section */
+  .cta-section {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    padding: 6rem 0;
+    text-align: center;
+  }
+
+  .cta-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .cta-content h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+  }
+
+  .cta-content p {
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+    opacity: 0.9;
+    line-height: 1.6;
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .cta-buttons .btn-primary,
+  .cta-buttons .btn-secondary {
+    padding: 1.2rem 2.5rem;
+    font-size: 1.2rem;
+  }
+
+  /* Our Clients and Partners */
+  .clients-partners {
+    background: var(--light-bg);
+    padding: 6rem 0;
+  }
+
+  .partners-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    margin-bottom: 4rem;
+  }
+
+  .partner-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+
+  .partner-card:nth-child(1) { animation-delay: 0.1s; }
+  .partner-card:nth-child(2) { animation-delay: 0.2s; }
+  .partner-card:nth-child(3) { animation-delay: 0.3s; }
+  .partner-card:nth-child(4) { animation-delay: 0.4s; }
+  .partner-card:nth-child(5) { animation-delay: 0.5s; }
+  .partner-card:nth-child(6) { animation-delay: 0.6s; }
+
+  .partner-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .partner-card img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+    border: 3px solid var(--primary-color);
+  }
+
+  .partner-card h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+  }
+
+  .partner-card p {
+    color: var(--text-light);
+    font-size: 0.9rem;
+  }
+
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .category {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+
+  .category:nth-child(1) { animation-delay: 0.1s; }
+  .category:nth-child(2) { animation-delay: 0.2s; }
+
+  .category:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .category h3 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+  }
+
+  .category p {
+    color: var(--text-light);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .category ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .category li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    color: var(--text-dark);
+  }
+
+  .category li:last-child {
+    border-bottom: none;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .hero h1 {
+      font-size: 2.5rem;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+    }
+
+    .hero-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .section-header h2 {
+      font-size: 2rem;
+    }
+
+    .features-grid,
+    .products-grid,
+    .partners-grid,
+    .categories-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .steps-container {
+      grid-template-columns: 1fr;
+    }
+
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .cta-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .hero {
+      padding: 4rem 0 3rem;
+    }
+
+    .hero h1 {
+      font-size: 2rem;
+    }
+  }
+</style>
+
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Building Kenya's Future, One Project at a Time</h1>
+    <p>Connect with trusted suppliers, expert consultants, and quality construction materials. Your one-stop platform for all construction needs in Kenya.</p>
+    <div class="hero-buttons">
+      <a href="{% url 'accounts:register' %}" class="btn-primary">Get Started Today</a>
+      <a href="{% url 'accounts:pricing' %}" class="btn-secondary">View Pricing</a>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats">
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-number">500+</div>
+      <div class="stat-title">Verified Suppliers</div>
+      <div class="stat-description">Trusted construction material suppliers across Kenya</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">1000+</div>
+      <div class="stat-title">Happy Customers</div>
+      <div class="stat-description">Satisfied customers who found their perfect materials</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">50+</div>
+      <div class="stat-title">Expert Consultants</div>
+      <div class="stat-description">Professional consultants ready to guide your projects</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">24/7</div>
+      <div class="stat-title">Support</div>
+      <div class="stat-description">Round-the-clock customer support for all your needs</div>
+    </div>
+  </div>
+</section>
+
+<!-- Our Clients and Partners -->
+<section class="clients-partners">
+  <div class="section-header">
+    <h2>Our Clients and Partners</h2>
+    <p>Trusted partners and professionals powering your construction projects</p>
+  </div>
+  <div class="partners-grid">
+    <div class="partner-card">
+      <img src="{% static 'images/simba cement.jpg' %}" alt="Simba Cement">
+      <h3>Simba Cement</h3>
+      <p>Simba Cement Company</p>
+    </div>
+    <div class="partner-card">
+      <img src="{% static 'images/bamburi cement.jpg' %}" alt="Bamburi Cement">
+      <h3>Bamburi Cement</h3>
+      <p>Bamburi Cement</p>
+    </div>
+    <div class="partner-card">
+      <img src="{% static 'images/bricks.jpg' %}" alt="Bricks Supplier">
+      <h3>Bricks Supplier</h3>
+      <p>Embu Bricks Production</p>
+    </div>
+    <div class="partner-card">
+      <img src="{% static 'images/sand.jpg' %}" alt="Sand Supplier">
+      <h3>Sand Supplier</h3>
+      <p>Umoja Sand Company</p>
+    </div>
+    <div class="partner-card">
+      <img src="{% static 'images/simba cement.jpg' %}" alt="Simba Cement">
+      <h3>Simba Cement</h3>
+      <p>Simba Cement Company</p>
+    </div>
+    <div class="partner-card">
+      <img src="{% static 'images/bamburi cement.jpg' %}" alt="Bamburi Cement">
+      <h3>Bamburi Cement</h3>
+      <p>Bamburi Cement</p>
+    </div>
+  </div>
+  <div class="categories-grid">
+    <div class="category">
+      <h3>🏗️ Trusted Suppliers</h3>
+      <p>Our verified suppliers provide quality construction materials and services.</p>
+      <ul>
+        <li>Cement & Concrete</li>
+        <li>Steel & Metals</li>
+        <li>Wood & Timber</li>
+      </ul>
+    </div>
+    <div class="category">
+      <h3>💬 Expert Consultants</h3>
+      <p>Professional consultants offering expert advice for your construction needs.</p>
+      <ul>
+        <li>Architectural Design</li>
+        <li>Project Management</li>
+        <li>Structural Engineering</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="features">
+  <div class="section-header">
+    <h2>Why Choose Construction Hub?</h2>
+    <p>Experience the difference with our comprehensive platform designed specifically for Kenya's construction industry.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <span class="feature-icon">🏗️</span>
+      <h3>Quality Materials</h3>
+      <p>Access premium construction materials from verified suppliers with guaranteed quality and timely delivery.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">💰</span>
+      <h3>Competitive Pricing</h3>
+      <p>Get the best deals on construction materials with transparent pricing and no hidden costs.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🚚</span>
+      <h3>Fast Delivery</h3>
+      <p>Reliable delivery services ensuring your materials arrive on time, every time.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">👨‍💼</span>
+      <h3>Expert Consultants</h3>
+      <p>Connect with certified construction consultants for professional advice and project guidance.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🔒</span>
+      <h3>Secure Payments</h3>
+      <p>Safe and secure payment processing with M-Pesa integration for easy transactions.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">📱</span>
+      <h3>Mobile Friendly</h3>
+      <p>Access our platform anywhere, anytime with our responsive mobile-friendly interface.</p>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section class="how-it-works">
+  <div class="section-header">
+    <h2>How It Works</h2>
+    <p>Getting started with Construction Hub is simple. Follow these three easy steps to begin your construction journey.</p>
+  </div>
+  <div class="steps-container">
+    <div class="step">
+      <div class="step-number">1</div>
+      <h3>Register & Browse</h3>
+      <p>Create your account and explore our wide range of construction materials and services from trusted suppliers.</p>
+    </div>
+    <div class="step">
+      <div class="step-number">2</div>
+      <h3>Place Your Order</h3>
+      <p>Select your materials, choose delivery options, and complete your secure payment through M-Pesa.</p>
+    </div>
+    <div class="step">
+      <div class="step-number">3</div>
+      <h3>Receive & Build</h3>
+      <p>Get your materials delivered to your doorstep and start building your dream project with confidence.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Products -->
+<section class="featured-products">
+  <div class="section-header">
+    <h2>Featured Products</h2>
+    <p>Discover our most popular construction materials, carefully selected for quality and reliability.</p>
+  </div>
+  <div class="products-grid">
+    {% for product in featured_products %}
+    <div class="product-card">
+      <div class="product-image">
+        {% if product.image %}
+          <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+        {% else %}
+          🏗️
+        {% endif %}
+      </div>
+      <div class="product-content">
+        <div class="product-title">{{ product.name }}</div>
+        <div class="product-price">KSH {{ product.price|floatformat:0 }}</div>
+        <div class="product-description">{{ product.description|truncatechars:100 }}</div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="product-card">
+      <div class="product-image">
+        <img src="{% static 'images/bamburi cement.jpg' %}" alt="Premium Cement" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+      </div>
+      <div class="product-content">
+        <div class="product-title">Premium Cement</div>
+        <div class="product-price">KSH 1,200</div>
+        <div class="product-description">High-quality cement perfect for all your construction needs.</div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-image">
+        <img src="{% static 'images/bricks.jpg' %}" alt="Building Bricks" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+      </div>
+      <div class="product-content">
+        <div class="product-title">Building Bricks</div>
+        <div class="product-price">KSH 15</div>
+        <div class="product-description">Durable red bricks for strong and reliable construction.</div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-image">
+        <img src="{% static 'images/mabati.jpg' %}" alt="Roofing Sheets" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+      </div>
+      <div class="product-content">
+        <div class="product-title">Roofing Sheets</div>
+        <div class="product-price">KSH 2,800</div>
+        <div class="product-description">Weather-resistant roofing sheets for long-lasting protection.</div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-image">
+        <img src="{% static 'images/timber.jpg' %}" alt="Timber & Lumber" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+      </div>
+      <div class="product-content">
+        <div class="product-title">Timber & Lumber</div>
+        <div class="product-price">KSH 3,200</div>
+        <div class="product-description">Quality timber for framing, flooring, and finishing work.</div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-image">
+        <img src="{% static 'images/electrical wires.jpg' %}" alt="Electrical Wires" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+      </div>
+      <div class="product-content">
+        <div class="product-title">Electrical Wires</div>
+        <div class="product-price">KSH 450</div>
+        <div class="product-description">Certified electrical wiring for safe and reliable installations.</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+  <div class="cta-content">
+    <h2>Ready to Start Your Construction Project?</h2>
+    <p>Join thousands of satisfied customers who trust Construction Hub for their construction material needs. Get started today and experience the difference.</p>
+    <div class="cta-buttons">
+      <a href="{% url 'accounts:register' %}" class="btn-primary">Join Construction Hub</a>
+      <a href="{% url 'accounts:contact' %}" class="btn-secondary">Contact Us</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

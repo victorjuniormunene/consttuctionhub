@@ -1,0 +1,693 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Moving Notification Message -->
+<div style="background: linear-gradient(90deg, #ffeb3b, #ffc107, #ffeb3b); color: #000; padding: 12px; font-weight: 600; font-size: 14px; border: 2px solid #f57c00; border-radius: 8px; margin-bottom: 1.5rem; text-align: center; box-shadow: 0 4px 12px rgba(245, 124, 0, 0.2);">
+  📢 All notifications are only sent to email | Track your orders in real-time | Get expert consultations
+</div>
+
+<style>
+.stat-card {
+  background: white;
+  border: none;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ff7f31, #ff4500);
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+.dashboard-section {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.section-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.product-card {
+  background: white;
+  border: none;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+}
+
+.product-card .product-image {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #f5f5f5, #e8e8e8);
+}
+
+.product-card .product-icon {
+  width: 100%;
+  height: 140px;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5rem;
+}
+
+.order-card {
+  background: white;
+  border: none;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.order-card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  transform: translateX(4px);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-completed { background: #d4edda; color: #155724; }
+.status-pending { background: #fff3cd; color: #856404; }
+.status-shipped { background: #cce5ff; color: #004085; }
+.status-default { background: #e2e3e5; color: #383d41; }
+
+.btn-primary {
+  background: linear-gradient(135deg, #ff7f31, #ff4500);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #e66a29, #e03e00);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 127, 49, 0.4);
+}
+
+.btn-secondary {
+  background: white;
+  color: #ff7f31;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #ff7f31;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-secondary:hover {
+  background: #ff7f31;
+  color: white;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 16px;
+  border: 2px dashed #dee2e6;
+}
+
+.empty-state-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.hero-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #6B8DD6 100%);
+}
+</style>
+
+<div class="container" style="max-width: 1200px; margin: 0 auto; padding: 2rem;">
+
+<!-- Hero Section -->
+<section class="hero-gradient" style="color: white; padding: 3rem 2rem; border-radius: 20px; margin-bottom: 2.5rem; text-align: center; box-shadow: 0 12px 40px rgba(102, 126, 234, 0.35); position: relative; overflow: hidden;">
+  <div style="position: absolute; top: -50%; right: -20%; width: 400px; height: 400px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
+  <div style="position: absolute; bottom: -30%; left: -10%; width: 300px; height: 300px; background: rgba(255,255,255,0.05); border-radius: 50%;"></div>
+  
+  <div style="position: relative; z-index: 1;">
+    <h1 style="font-size: 2.5rem; margin: 0 0 0.75rem 0; font-weight: 800; text-shadow: 0 2px 10px rgba(0,0,0,0.2);">
+      Welcome back, {{ user.get_full_name|default:user.username }}! 👋
+    </h1>
+    <p style="font-size: 1.15rem; margin: 0 0 2rem 0; opacity: 0.95; max-width: 600px; margin-left: auto; margin-right: auto;">
+      Manage your construction projects with ease. Track orders, book consultations, and discover quality products.
+    </p>
+
+    <!-- Quick Actions -->
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
+      <a href="{% url 'suppliers:product_list' %}" style="background: rgba(255, 255, 255, 0.25); color: white; padding: 1rem 2rem; border-radius: 12px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3);" onmouseover="this.style.background='rgba(255,255,255,0.35)'; this.style.transform='translateY(-3px)';" onmouseout="this.style.background='rgba(255,255,255,0.25)'; this.style.transform='translateY(0)';">
+        🛒 Browse Products
+      </a>
+      <a href="{% url 'consultations:select_consultant' %}" style="background: rgba(255, 255, 255, 0.25); color: white; padding: 1rem 2rem; border-radius: 12px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3);" onmouseover="this.style.background='rgba(255,255,255,0.35)'; this.style.transform='translateY(-3px)';" onmouseout="this.style.background='rgba(255,255,255,0.25)'; this.style.transform='translateY(0)';">
+        💬 Book Consultation
+      </a>
+      <a href="{% url 'orders:order_list' %}" style="background: rgba(255, 255, 255, 0.25); color: white; padding: 1rem 2rem; border-radius: 12px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3);" onmouseover="this.style.background='rgba(255,255,255,0.35)'; this.style.transform='translateY(-3px)';" onmouseout="this.style.background='rgba(255,255,255,0.25)'; this.style.transform='translateY(0)';">
+        📋 View Orders
+      </a>
+      <a href="{% url 'consultations:download_profile_pdf' %}" style="background: rgba(255, 127, 49, 0.9); color: white; padding: 1rem 2rem; border-radius: 12px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3);" onmouseover="this.style.background='rgba(255, 127, 49, 1)'; this.style.transform='translateY(-3px)';" onmouseout="this.style.background='rgba(255, 127, 49, 0.9)'; this.style.transform='translateY(0)';">
+        📄 Download Profile PDF
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Quick Stats Section -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem;">
+    <div class="stat-card">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #ff7f31, #ff4500); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">📦</div>
+        <span style="font-size: 2rem; font-weight: 800; color: #ff7f31;">{{ total_orders }}</span>
+      </div>
+      <h3 style="color: #666; font-size: 0.95rem; margin: 0; font-weight: 600;">Total Orders</h3>
+      <p style="color: #999; font-size: 0.85rem; margin: 0.25rem 0 0 0;">All time purchases</p>
+    </div>
+    <div class="stat-card">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #28a745, #20c997); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">✓</div>
+        <span style="font-size: 2rem; font-weight: 800; color: #28a745;">{{ completed_orders }}</span>
+      </div>
+      <h3 style="color: #666; font-size: 0.95rem; margin: 0; font-weight: 600;">Completed</h3>
+      <p style="color: #999; font-size: 0.85rem; margin: 0.25rem 0 0 0;">Successfully delivered</p>
+    </div>
+    <div class="stat-card">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #0d6efd, #6610f2); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">🚚</div>
+        <span style="font-size: 2rem; font-weight: 800; color: #0d6efd;">{{ in_transit_orders }}</span>
+      </div>
+      <h3 style="color: #666; font-size: 0.95rem; margin: 0; font-weight: 600;">In Transit</h3>
+      <p style="color: #999; font-size: 0.85rem; margin: 0.25rem 0 0 0;">On the way to you</p>
+    </div>
+    <div class="stat-card">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #6f42c1, #e83e8c); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">💬</div>
+      </div>
+      <h3 style="color: #666; font-size: 0.95rem; margin: 0; font-weight: 600;">Expert Help</h3>
+      <a href="{% url 'consultations:select_consultant' %}" style="color: #ff7f31; text-decoration: none; font-weight: 700; font-size: 1.1rem;">Book Now →</a>
+    </div>
+  </div>
+
+  <!-- Quick Order Section - Featured Products -->
+  <section style="margin-bottom: 2.5rem; animation-delay: 0.1s;" class="dashboard-section">
+    <div class="section-header">
+      <h2>🛒 Quick Order - Featured Products</h2>
+      <a href="{% url 'suppliers:product_list' %}" style="margin-left: auto; color: #ff7f31; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+        View All Products <span style="font-size: 1.2rem;">→</span>
+      </a>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+      {% for product in products|slice:":3" %}
+        <div class="product-card">
+          {% if product.image_url %}
+            <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          {% endif %}
+          <div class="product-icon" style="background: linear-gradient(135deg, {% cycle '#ff7f31,#ff4500' '#667eea,#764ba2' '#28a745,#20c997' %}, #ff4500); display: {% if product.image_url %}none{% else %}flex{% endif %};">
+            {% if product.category == 'cement' %}🏗️
+            {% elif product.category == 'steel' %}🔩
+            {% elif product.category == 'wood' %}🪵
+            {% elif product.category == 'electrical' %}⚡
+            {% elif product.category == 'plumbing' %}🔧
+            {% elif product.category == 'tools' %}🔨
+            {% else %}📦{% endif %}
+          </div>
+          
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+            <div>
+              <h3 style="margin: 0 0 0.5rem 0; font-size: 1.15rem; color: #1a1a2e; font-weight: 700;">{{ product.name }}</h3>
+              <span style="display: inline-block; padding: 0.25rem 0.75rem; background: #f0f0f0; border-radius: 20px; font-size: 0.75rem; color: #666; font-weight: 500;">
+                {{ product.get_category_display|default:'Construction Material' }}
+              </span>
+            </div>
+          </div>
+          
+          {% if product.description %}
+            <p style="color: #666; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">{{ product.description|truncatechars:100 }}</p>
+          {% endif %}
+          
+          <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid #f0f0f0;">
+            <div>
+              <span style="font-size: 1.4rem; font-weight: 800; color: #ff7f31;">KSH {{ product.cost|default:0|floatformat:0 }}</span>
+              {% if product.available_quantity > 0 %}
+                <span style="font-size: 0.8rem; color: #28a745; margin-left: 0.5rem;">✓ In Stock</span>
+              {% endif %}
+            </div>
+            <a href="{% url 'orders:order_create' %}?product={{ product.id }}" class="btn-primary">
+              Order Now
+            </a>
+          </div>
+        </div>
+      {% empty %}
+        <div class="empty-state" style="grid-column: 1 / -1;">
+          <div class="empty-state-icon">📦</div>
+          <h3 style="color: #666; margin-bottom: 0.5rem;">No products available at the moment</h3>
+          <p style="color: #999; margin-bottom: 1.5rem;">Check back later for new products</p>
+          <a href="{% url 'suppliers:product_list' %}" class="btn-secondary">Browse All Products</a>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Recent Orders Section -->
+  <section style="margin-bottom: 2.5rem; animation-delay: 0.2s;" class="dashboard-section">
+    <div class="section-header">
+      <h2>📦 Recent Orders</h2>
+      <a href="{% url 'orders:order_list' %}" style="margin-left: auto; color: #ff7f31; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+        View All Orders <span style="font-size: 1.2rem;">→</span>
+      </a>
+    </div>
+    
+    <div style="background: white; border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+      {% for order in orders|slice:":5" %}
+        <div class="order-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              <div style="width: 45px; height: 45px; background: linear-gradient(135deg, #f8f9fa, #e9ecef); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+                {% if order.status == 'completed' %}✅
+                {% elif order.status == 'shipped' %}🚚
+                {% elif order.status == 'paid' %}💳
+                {% elif order.status == 'pending_payment' %}⏳
+                {% else %}📋{% endif %}
+              </div>
+              <div>
+                <div style="font-weight: 700; color: #1a1a2e; font-size: 1rem;">
+                  {{ forloop.counter }}{% if forloop.counter == 1 %}st{% elif forloop.counter == 2 %}nd{% elif forloop.counter == 3 %}rd{% else %}th{% endif %} Order - {{ order.product.name|default:'Product' }}
+                </div>
+                <div style="color: #666; font-size: 0.85rem;">
+                  {{ order.created_at|date:'M d, Y' }} • Quantity: {{ order.quantity }}
+                </div>
+              </div>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+              <span class="status-badge 
+                {% if order.status == 'completed' or order.status == 'paid' %}status-completed
+                {% elif order.status == 'pending_payment' or order.status == 'saved' %}status-pending
+                {% elif order.status == 'shipped' %}status-shipped
+                {% else %}status-default{% endif %}">
+                {{ order.get_status_display }}
+              </span>
+              <span style="font-weight: 700; color: #1a1a2e; font-size: 1rem;">KSH {{ order.total_cost|default:order.price|default:0|floatformat:0 }}</span>
+              
+              {% if order.status == 'pending_payment' %}
+                <button onclick="document.getElementById('mpesa_message').scrollIntoView({behavior: 'smooth'}); document.getElementById('mpesa_message').focus();" style="background: #ffc107; color: #333; padding: 0.5rem 1rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.85rem;">
+                  💳 Update Payment
+                </button>
+              {% endif %}
+              {% if order.status == 'paid' or order.status == 'completed' or order.status == 'complete_waiting_transport' or order.status == 'shipped' %}
+                <a href="{% url 'orders:download_receipt' order.id %}" style="background: #28a745; color: white; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.85rem;">
+                  📄 Receipt
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div class="empty-state">
+          <div class="empty-state-icon">📋</div>
+          <h3 style="color: #666; margin-bottom: 0.5rem;">No orders yet</h3>
+          <p style="color: #999; margin-bottom: 1.5rem;">Start by browsing our products!</p>
+          <a href="{% url 'suppliers:product_list' %}" class="btn-primary">Browse Products</a>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Reports and Analytics Section -->
+  <section style="margin-bottom: 2.5rem; animation-delay: 0.25s;" class="dashboard-section">
+    <div class="section-header">
+      <h2>📊 Order Reports & Analytics</h2>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+      <!-- Order Summary Card -->
+      <div style="background: white; border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+        <h4 style="margin: 0 0 1.25rem 0; color: #1a1a2e; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">
+          📋 Order Summary
+        </h4>
+        <div style="display: grid; gap: 1rem;">
+          <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: #f8f9fa; border-radius: 8px;">
+            <span style="color: #666; font-weight: 500;">Total Orders</span>
+            <strong style="color: #1a1a2e; font-size: 1.1rem;">{{ total_orders }}</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: #f8f9fa; border-radius: 8px;">
+            <span style="color: #666; font-weight: 500;">Total Value</span>
+            <strong style="color: #ff7f31; font-size: 1.1rem;">KSH {{ total_value|floatformat:0 }}</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: #f8f9fa; border-radius: 8px;">
+            <span style="color: #666; font-weight: 500;">Completed</span>
+            <strong style="color: #28a745; font-size: 1.1rem;">{{ completed_orders }}</strong>
+          </div>
+        </div>
+        <a href="{% url 'dashboard:download_customer_report' %}" class="btn-primary" style="width: 100%; text-align: center; margin-top: 1.25rem; box-sizing: border-box;">
+          📥 Download Report
+        </a>
+      </div>
+      
+      <!-- Recent Activity Card -->
+      <div style="background: white; border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+        <h4 style="margin: 0 0 1.25rem 0; color: #1a1a2e; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">
+          ⚡ Recent Activity
+        </h4>
+        {% for order in orders|slice:":3" %}
+          <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 0; border-bottom: 1px solid #f0f0f0;">
+            <div style="width: 8px; height: 8px; background: #ff7f31; border-radius: 50%;"></div>
+            <div>
+              <div style="font-weight: 600; color: #1a1a2e; font-size: 0.9rem;">{{ order.product.name|default:'Product' }}</div>
+              <div style="color: #999; font-size: 0.8rem;">{{ order.created_at|date:'M d, Y' }} • {{ order.get_status_display }}</div>
+            </div>
+          </div>
+        {% empty %}
+          <p style="color: #999; text-align: center; padding: 1rem;">No recent activity</p>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- Manual Payment Update Section -->
+  <section style="margin-bottom: 2.5rem; animation-delay: 0.3s;" class="dashboard-section">
+    <!-- Toggle Button -->
+    <button onclick="togglePaymentSection()" id="payment_toggle_btn" style="width: 100%; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; padding: 1.25rem 2rem; border: none; border-radius: 16px; cursor: pointer; font-weight: 700; font-size: 1.1rem; transition: all 0.3s ease; box-shadow: 0 8px 25px rgba(17, 153, 142, 0.3); display: flex; align-items: center; justify-content: center; gap: 0.75rem;" 
+      onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 30px rgba(17, 153, 142, 0.4)';"
+      onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(17, 153, 142, 0.3)';">
+      <span style="font-size: 1.5rem;">💳</span> 
+      <span>Update Payment Status</span>
+      <span id="toggle_icon" style="font-size: 1.2rem; margin-left: 0.5rem;">▼</span>
+    </button>
+    
+    <p style="color: #666; font-size: 0.9rem; margin: 0.75rem 0 1.5rem 0; text-align: center;">Manually update your order after M-Pesa payment</p>
+
+    <!-- Collapsible Content -->
+    <div id="payment_section" style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 8px 30px rgba(0,0,0,0.08); display: none;">
+      <!-- Alert Banner -->
+      <div style="display: flex; align-items: flex-start; gap: 1rem; padding: 1rem; background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%); border-radius: 12px; margin-bottom: 1.5rem; border: 1px solid #ffd54f;">
+        <div style="font-size: 1.5rem;">⚠️</div>
+        <div>
+          <p style="margin: 0; color: #795548; font-weight: 600; font-size: 0.95rem;">Order status not updating automatically?</p>
+          <p style="margin: 0.25rem 0 0 0; color: #795548; font-size: 0.85rem;">Select your order below and paste your M-Pesa confirmation message to update the payment status.</p>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <form method="post" action="{% url 'orders:manual_mpesa_update' %}">
+        {% csrf_token %}
+        
+        <!-- Order Selector Dropdown -->
+        <div style="margin-bottom: 1.5rem;">
+          <label for="order_select" style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600; margin-bottom: 0.75rem; color: #1a1a2e; font-size: 1rem;">
+            📋 Select Order
+          </label>
+          <select 
+            id="order_select" 
+            style="width: 100%; padding: 1rem; border: 2px solid #e0e7ff; border-radius: 12px; font-size: 0.95rem; background: #fafbff; cursor: pointer; transition: all 0.3s ease;"
+            onfocus="this.style.borderColor='#11998e'; this.style.boxShadow='0 0 0 4px rgba(17, 153, 142, 0.1)';"
+            onblur="this.style.borderColor='#e0e7ff'; this.style.boxShadow='none';"
+            onchange="showOrderDetails()"
+          >
+            <option value="">-- Select an order --</option>
+            {% for order in pending_orders %}
+              <option value="{{ order.order_number }}" 
+                data-product="{{ order.product.name|default:'N/A' }}"
+                data-amount="{{ order.total_cost|default:0 }}"
+                data-date="{{ order.created_at|date:'M d, Y' }}"
+                data-quantity="{{ order.quantity }}"
+                data-status="{{ order.get_status_display }}">
+                {{ order.order_number }} - {{ order.product.name|default:'Product' }} (KSH {{ order.total_cost|default:0 }})
+              </option>
+            {% empty %}
+              <option value="" disabled>No pending orders found</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Order Details Display -->
+        <div id="order_details" style="display: none; margin-bottom: 1.5rem; padding: 1rem; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 12px; border: 1px solid #86efac;">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+            <span style="font-size: 1.2rem;">📦</span>
+            <h4 style="margin: 0; color: #166534; font-size: 1rem;">Order Details</h4>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem;">
+            <div>
+              <small style="color: #6b7280; font-size: 0.8rem;">Product</small>
+              <p style="margin: 0; color: #1f2937; font-weight: 600; font-size: 0.9rem;" id="detail_product">-</p>
+            </div>
+            <div>
+              <small style="color: #6b7280; font-size: 0.8rem;">Quantity</small>
+              <p style="margin: 0; color: #1f2937; font-weight: 600; font-size: 0.9rem;" id="detail_quantity">-</p>
+            </div>
+            <div>
+              <small style="color: #6b7280; font-size: 0.8rem;">Amount</small>
+              <p style="margin: 0; color: #1f2937; font-weight: 600; font-size: 0.9rem;" id="detail_amount">-</p>
+            </div>
+            <div>
+              <small style="color: #6b7280; font-size: 0.8rem;">Date</small>
+              <p style="margin: 0; color: #1f2937; font-weight: 600; font-size: 0.9rem;" id="detail_date">-</p>
+            </div>
+            <div>
+              <small style="color: #6b7280; font-size: 0.8rem;">Status</small>
+              <p style="margin: 0; color: #dc2626; font-weight: 600; font-size: 0.9rem;" id="detail_status">Pending Payment</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phone Number Input -->
+        <div style="margin-bottom: 1.5rem;">
+          <label for="phone_number" style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600; margin-bottom: 0.75rem; color: #1a1a2e; font-size: 1rem;">
+            📱 Phone Number (for SMS notification)
+          </label>
+          <input 
+            type="tel" 
+            name="phone_number" 
+            id="phone_number" 
+            value="{{ user.phone_number|default:'' }}"
+            placeholder="e.g., 0712345678 or +254712345678"
+            pattern="(\+?254[1-9]\d{8}|0[1-9]\d{8})"
+            style="width: 100%; padding: 1rem; border: 2px solid #e0e7ff; border-radius: 12px; font-size: 0.95rem; transition: all 0.3s ease; background: #fafbff; box-sizing: border-box;"
+            onfocus="this.style.borderColor='#11998e'; this.style.boxShadow='0 0 0 4px rgba(17, 153, 142, 0.1)';"
+            onblur="this.style.borderColor='#e0e7ff'; this.style.boxShadow='none';"
+          />
+          <small style="color: #666; font-size: 0.85rem; margin-top: 0.5rem; display: block;">
+            💡 Enter the phone number you used for M-Pesa payment. This is needed to send you SMS confirmation.
+          </small>
+        </div>
+
+        <!-- M-Pesa Message Textarea -->
+        <div style="margin-bottom: 1.5rem;">
+          <label for="mpesa_message" style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600; margin-bottom: 0.75rem; color: #1a1a2e; font-size: 1rem;">
+            📝 M-Pesa Confirmation Message
+          </label>
+          <textarea 
+            name="mpesa_message" 
+            id="mpesa_message" 
+            rows="5" 
+            placeholder="Paste your full M-Pesa confirmation message here...
+
+Example: UBB7G6CRBZ Confirmed. KSH10.00 sent to Daraja-Sandbox for account Order-ORD-00000387"
+            style="width: 100%; padding: 1rem; border: 2px solid #e0e7ff; border-radius: 12px; font-family: 'Courier New', monospace; font-size: 0.95rem; resize: vertical; transition: all 0.3s ease; background: #fafbff; box-sizing: border-box;"
+            onfocus="this.style.borderColor='#11998e'; this.style.boxShadow='0 0 0 4px rgba(17, 153, 142, 0.1)';"
+            onblur="this.style.borderColor='#e0e7ff'; this.style.boxShadow='none';"
+            oninput="autoDetectOrder()"
+            required
+          ></textarea>
+        </div>
+        
+        <!-- Submit Button -->
+        <button type="submit" style="width: 100%; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; padding: 1rem 2rem; border: none; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 1.1rem; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(17, 153, 142, 0.3); display: flex; align-items: center; justify-content: center; gap: 0.75rem;" 
+          onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(17, 153, 142, 0.4)';"
+          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(17, 153, 142, 0.3)';"
+        >
+          <span style="font-size: 1.3rem;">✅</span> Update Payment Status
+        </button>
+      </form>
+
+      <!-- Instructions Card -->
+      <div style="margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, #f0f4ff 0%, #e8eeff 100%); border-radius: 12px; border: 1px solid #c7d2fe;">
+        <h4 style="margin: 0 0 1rem 0; color: #3730a3; font-size: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+          <span style="font-size: 1.2rem;">📱</span> How to get your M-Pesa message:
+        </h4>
+        <div style="display: grid; gap: 0.75rem;">
+          <div style="display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+            <div style="width: 28px; height: 28px; background: #11998e; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0;">1</div>
+            <p style="margin: 0; color: #4b5563; font-size: 0.9rem;">Complete your M-Pesa payment as usual</p>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+            <div style="width: 28px; height: 28px; background: #11998e; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0;">2</div>
+            <p style="margin: 0; color: #4b5563; font-size: 0.9rem;">Open the M-Pesa app or check your SMS messages</p>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+            <div style="width: 28px; height: 28px; background: #11998e; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0;">3</div>
+            <p style="margin: 0; color: #4b5563; font-size: 0.9rem;">Copy the full confirmation message</p>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+            <div style="width: 28px; height: 28px; background: #11998e; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0;">4</div>
+            <p style="margin: 0; color: #4b5563; font-size: 0.9rem;">Paste it above and click "Update Payment Status"</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JavaScript -->
+  <script>
+    function togglePaymentSection() {
+      const section = document.getElementById('payment_section');
+      const icon = document.getElementById('toggle_icon');
+      const btn = document.getElementById('payment_toggle_btn');
+      
+      if (section.style.display === 'none') {
+        section.style.display = 'block';
+        icon.textContent = '▲';
+        // Smooth scroll to the section
+        section.scrollIntoView({behavior: 'smooth', block: 'start'});
+      } else {
+        section.style.display = 'none';
+        icon.textContent = '▼';
+      }
+    }
+    
+    function showOrderDetails() {
+      const select = document.getElementById('order_select');
+      const orderDetails = document.getElementById('order_details');
+      const selectedOption = select.options[select.selectedIndex];
+      if (select.value) {
+        document.getElementById('detail_product').textContent = selectedOption.dataset.product || '-';
+        document.getElementById('detail_quantity').textContent = selectedOption.dataset.quantity || '-';
+        document.getElementById('detail_amount').textContent = 'KSH ' + (selectedOption.dataset.amount || '0');
+        document.getElementById('detail_date').textContent = selectedOption.dataset.date || '-';
+        document.getElementById('detail_status').textContent = selectedOption.dataset.status || 'Pending Payment';
+        orderDetails.style.display = 'block';
+      } else {
+        orderDetails.style.display = 'none';
+      }
+    }
+
+    function autoDetectOrder() {
+      const message = document.getElementById('mpesa_message').value;
+      const select = document.getElementById('order_select');
+      const orderMatch = message.match(/Order-(ORD-\d+)/i);
+      if (orderMatch) {
+        const orderNumber = orderMatch[1].toUpperCase();
+        for (let i = 0; i < select.options.length; i++) {
+          if (select.options[i].value === orderNumber) {
+            select.selectedIndex = i;
+            showOrderDetails();
+            const orderDetails = document.getElementById('order_details');
+            orderDetails.style.borderColor = '#22c55e';
+            orderDetails.style.background = 'linear-gradient(135deg, #f0fdf4 0%, #bbf7d0 100%)';
+            setTimeout(() => {
+              orderDetails.style.borderColor = '#86efac';
+              orderDetails.style.background = 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)';
+            }, 2000);
+            break;
+          }
+        }
+      }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Dashboard loaded');
+    });
+  </script>
+
+  <!-- Recent Consultations Section -->
+  <section style="margin-bottom: 2.5rem; animation-delay: 0.35s;" class="dashboard-section">
+    <div class="section-header">
+      <h2>💬 Recent Bookings</h2>
+    </div>
+    <div style="background: white; border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+      {% for consultation in consultations|slice:":5" %}
+        <div class="order-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              <div style="width: 45px; height: 45px; background: linear-gradient(135deg, #6f42c1, #e83e8c); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">👤</div>
+              <div>
+                <div style="font-weight: 700; color: #1a1a2e; font-size: 1rem;">{{ consultation.consultant_name|default:'Consultant' }}</div>
+                <div style="color: #666; font-size: 0.85rem;">{{ consultation.date_requested|date:'M d, Y' }}</div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+              <span class="status-badge {% if consultation.status == 'completed' %}status-completed{% elif consultation.status == 'pending' %}status-pending{% else %}status-default{% endif %}">
+                {{ consultation.get_status_display }}
+              </span>
+              <span style="font-weight: 700; color: #1a1a2e; font-size: 1rem;">KSH {{ consultation.consultation_rate|default:0|floatformat:0 }}</span>
+              {% if consultation.status == 'completed' or consultation.status == 'pending' %}
+                <a href="{% url 'consultations:download_consultation_receipt' consultation.id %}" style="background: #28a745; color: white; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.85rem;">📄 Receipt</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div class="empty-state">
+          <div class="empty-state-icon">💬</div>
+          <h3 style="color: #666; margin-bottom: 0.5rem;">No bookings yet</h3>
+          <p style="color: #999; margin-bottom: 1.5rem;">Book a consultation to get expert advice!</p>
+          <a href="{% url 'consultations:select_consultant' %}" class="btn-primary">Book Consultation</a>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+{% endblock %}

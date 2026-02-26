@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="form-card">
+    <h1>Confirm Order Cancellation</h1>
+    <p>Are you sure you want to cancel this order?</p>
+    <p><strong>Order #{{ order.id }}</strong></p>
+    <p><strong>Product:</strong> {{ order.product.name }}</p>
+    <p><strong>Quantity:</strong> {{ order.quantity }}</p>
+    <p><strong>Status:</strong> {{ order.get_status_display }}</p>
+    <form method="post" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn" style="background-color: #dc3545;">Yes, Cancel Order</button>
+    </form>
+    <a class="btn secondary" href="{% url 'orders:order_detail' order.id %}">No, Keep Order</a>
+</div>
+{% endblock %}

@@ -1,0 +1,72 @@
+[
+    {
+        "model": "accounts.user",
+        "pk": 1,
+        "fields": {
+            "username": "admin",
+            "password": "admin_password",
+            "role": "admin",
+            "email": "admin@example.com"
+        }
+    },
+    {
+        "model": "accounts.user",
+        "pk": 2,
+        "fields": {
+            "username": "supplier1",
+            "password": "supplier_password",
+            "role": "supplier",
+            "email": "supplier1@example.com"
+        }
+    },
+    {
+        "model": "accounts.user",
+        "pk": 3,
+        "fields": {
+            "username": "customer1",
+            "password": "customer_password",
+            "role": "customer",
+            "email": "customer1@example.com"
+        }
+    },
+    {
+        "model": "suppliers.supplier",
+        "pk": 1,
+        "fields": {
+            "user": 2,
+            "company_name": "Supplier Company",
+            "location": "123 Supplier St, City, Country"
+        }
+    },
+    {
+        "model": "products.product",
+        "pk": 1,
+        "fields": {
+            "supplier": 1,
+            "name": "Concrete Mix",
+            "description": "High-quality concrete mix for construction.",
+            "cost": 50.00,
+            "location": "Warehouse A"
+        }
+    },
+    {
+        "model": "orders.order",
+        "pk": 1,
+        "fields": {
+            "customer": 3,
+            "product": 1,
+            "quantity": 10,
+            "status": "pending"
+        }
+    },
+    {
+        "model": "consultations.consultation",
+        "pk": 1,
+        "fields": {
+            "customer": 3,
+            "date": "2023-10-01",
+            "time": "10:00",
+            "details": "Consultation about building plans."
+        }
+    }
+]

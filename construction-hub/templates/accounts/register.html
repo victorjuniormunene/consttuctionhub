@@ -1,0 +1,296 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - Construction Hub</title>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <style>
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 1rem;
+    }
+
+    .register-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      max-width: 1200px;
+      width: 100%;
+    }
+
+    .register-visual {
+      animation: slideInLeft 0.8s ease-out;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: white;
+    }
+
+    .register-visual h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+
+    .register-visual p {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      opacity: 0.95;
+      line-height: 1.6;
+    }
+
+    .benefit-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .benefit-item {
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+    }
+
+    .benefit-item .icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .benefit-item h4 {
+      font-size: 0.95rem;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .register-form-wrapper {
+      animation: slideInRight 0.8s ease-out;
+    }
+
+    .auth-form {
+      background: white;
+      border-radius: 16px;
+      padding: 3rem;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    }
+
+    .auth-form h1 {
+      font-size: 2rem;
+      color: #333;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
+
+    .auth-form .subtitle {
+      color: #666;
+      margin-bottom: 2rem;
+      font-size: 1rem;
+    }
+
+    .auth-form form {
+      margin-bottom: 2rem;
+    }
+
+    .auth-form form p {
+      margin-bottom: 1.5rem;
+    }
+
+    .auth-form form label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #333;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .auth-form form input,
+    .auth-form form select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      font-family: inherit;
+      box-sizing: border-box;
+    }
+
+    .auth-form form input:focus,
+    .auth-form form select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .role-radio-group {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .role-radio-group label {
+      flex: 1;
+      padding: 1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .role-radio-group input[type="radio"] {
+      display: none;
+    }
+
+    .role-radio-group input[type="radio"]:checked + label {
+      border-color: #667eea;
+      background: rgba(102, 126, 234, 0.1);
+      color: #667eea;
+    }
+
+    .role-radio-group label:hover {
+      border-color: #667eea;
+    }
+
+    .auth-form form button {
+      width: 100%;
+      padding: 0.75rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .auth-form form button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .auth-form .login-link {
+      text-align: center;
+      color: #666;
+    }
+
+    .auth-form .login-link a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .auth-form .login-link a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .register-container {
+        grid-template-columns: 1fr;
+      }
+      .register-visual {
+        display: none;
+      }
+      .auth-form {
+        padding: 2rem;
+      }
+      .auth-form h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="register-container">
+    <!-- Left Side - Visual -->
+    <div class="register-visual">
+      <h2>Join 1000+ Teams! 🚀</h2>
+      <p>Create your account and start managing your construction projects with ease.</p>
+      <div class="benefit-grid">
+        <div class="benefit-item">
+          <div class="icon">📊</div>
+          <h4>Easy Management</h4>
+        </div>
+        <div class="benefit-item">
+          <div class="icon">⚡</div>
+          <h4>Fast Setup</h4>
+        </div>
+        <div class="benefit-item">
+          <div class="icon">🔒</div>
+          <h4>Secure</h4>
+        </div>
+        <div class="benefit-item">
+          <div class="icon">👥</div>
+          <h4>Team Collaboration</h4>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side - Form -->
+    <div class="register-form-wrapper">
+      <div class="auth-form">
+        <h1>Create Account</h1>
+        <p class="subtitle">Join Construction Hub and start building</p>
+        <form id="registerForm" method="post">
+          {% csrf_token %}
+          <p>
+            <label for="{{ form.username.id_for_label }}">Username:</label>
+            {{ form.username }}
+            {% if form.username.help_text %}
+              <small>{{ form.username.help_text }}</small>
+            {% endif %}
+          </p>
+          <p>
+            <label for="{{ form.email.id_for_label }}">Email address:</label>
+            {{ form.email }}
+          </p>
+          <p>
+            <label for="id_role">Role:</label>
+            <div class="role-radio-group">
+              <input type="radio" id="role_customer" name="role" value="customer" {% if initial_role == 'customer' %}checked{% endif %}>
+              <label for="role_customer">Customer</label>
+              
+              <input type="radio" id="role_supplier" name="role" value="supplier" {% if initial_role == 'supplier' %}checked{% endif %}>
+              <label for="role_supplier">Supplier</label>
+            </div>
+          </p>
+          <p>
+            <label for="{{ form.password1.id_for_label }}">Password:</label>
+            {{ form.password1 }}
+          </p>
+          <p>
+            <label for="{{ form.password2.id_for_label }}">Confirm password:</label>
+            {{ form.password2 }}
+          </p>
+          <button type="submit">Create Account</button>
+        </form>
+        <p class="login-link">Already have an account? <a href="{% url 'accounts:login' %}">Login here</a></p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

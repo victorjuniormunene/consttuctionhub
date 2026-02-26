@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  .consultant-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+  }
+  .consultant-card {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+  }
+  .consultant-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  }
+  .consultant-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 1rem;
+  }
+  .consultant-info h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.2rem;
+    color: #333;
+  }
+  .consultant-details {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 1rem;
+  }
+  .consultant-details p {
+    margin: 0.5rem 0;
+  }
+  .rate-box {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  .rate-box .label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+  }
+  .rate-box .value {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  .btn-select {
+    width: 100%;
+    padding: 0.75rem;
+    background: #0d6efd;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .btn-select:hover {
+    background: #0b5ed7;
+    transform: translateY(-2px);
+  }
+  .filter-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .filter-section label {
+    display: inline-block;
+    margin-right: 1rem;
+    font-weight: 600;
+    color: #333;
+  }
+  .filter-section select {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+  }
+</style>
+
+<div class="container" style="margin-top: 2rem; margin-bottom: 2rem;">
+  <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
+    <h1 style="font-size: 2rem; margin: 0 0 0.5rem 0;">🎓 Select a Consultant</h1>
+    <p style="margin: 0; opacity: 0.95; font-size: 1.05rem;">Choose from our pool of expert consultants and book a session today.</p>
+  </div>
+
+  <!-- Specialization Filter -->
+  <div class="filter-section">
+    <form method="get" style="display: flex; align-items: center; gap: 1rem;">
+      <label for="specialization">Filter by Specialization:</label>
+      <select name="specialization" id="specialization" onchange="this.form.submit()">
+        <option value="">All Specializations</option>
+        {% for spec in specializations %}
+          <option value="{{ spec }}" {% if spec == selected_specialization %}selected{% endif %}>{{ spec }}</option>
+        {% endfor %}
+      </select>
+    </form>
+  </div>
+
+  <!-- Consultants Grid -->
+  {% if consultants %}
+    <div class="consultant-grid">
+      {% for consultant in consultants %}
+        <div class="consultant-card">
+          <div class="consultant-header">
+            <div class="consultant-info">
+              <h3>{{ consultant.full_name }}</h3>
+            </div>
+          </div>
+          
+          <div class="consultant-details">
+            <p><strong>📱 Phone:</strong> {{ consultant.phone }}</p>
+            <p><strong>🎓 Specialization:</strong> {{ consultant.specialization|default:"General Consulting" }}</p>
+            <p><strong>💼 Experience:</strong> {{ consultant.experience_years }} years</p>
+            {% if consultant.cover_letter %}
+              <p><strong>About:</strong> {{ consultant.cover_letter|truncatewords:20 }}</p>
+            {% endif %}
+          </div>
+
+          <div class="rate-box">
+            <div class="label">Consultation Rate</div>
+            <div class="value">KSH {{ consultant.consultation_rate }}</div>
+          </div>
+
+          <a href="{% url 'consultations:confirm_consultation_booking' consultant.id %}" class="btn-select">
+            ✓ Select Consultant
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div style="text-align: center; padding: 3rem; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+      <div style="font-size: 3rem; margin-bottom: 1rem;">😔</div>
+      <p style="color: #666; font-size: 1.1rem;">No consultants available at the moment.</p>
+      <p style="color: #999; margin-bottom: 2rem;">Please check back later or contact support.</p>
+      <a href="{% url 'accounts:home' %}" style="display: inline-block; background: #667eea; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600;">← Back to Home</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

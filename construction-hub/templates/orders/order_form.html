@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container" style="max-width: 600px; margin: 2rem auto;">
+    <div class="form-card">
+        <h1 style="margin-bottom: 1rem;">Create Order</h1>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" style="margin-bottom: 1rem; padding: 0.75rem; border-radius: 8px; background: {% if message.tags == 'error' %}#f8d7da{% else %}#d1ecf1{% endif %}; color: {% if message.tags == 'error' %}#721c24{% else %}#0c5460{% endif %};">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% if product %}
+                <input type="hidden" name="product" value="{{ product.id }}" />
+                <div style="background: #e7f3ff; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid #0d6efd;">
+                    <p style="margin: 0; color: #0c5460;"><strong>Selected Product:</strong></p>
+                    <p style="margin: 0.5rem 0 0 0; font-size: 1.1rem; font-weight: bold;">{{ product.name }}</p>
+                    <p style="margin: 0.25rem 0; color: #666;">Price: KSH {{ product.cost }}</p>
+                    <p style="margin: 0.25rem 0; color: #666;">{{ product.description|truncatewords:10 }}</p>
+                </div>
+            {% else %}
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label style="font-weight: 600; margin-bottom: 0.5rem; display: block;">Select a Product:</label>
+                    <p style="color: #999; font-size: 0.95rem;">No product selected. <a href="{% url 'suppliers:product_list' %}">Browse products</a></p>
+                </div>
+            {% endif %}
+            
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="{{ form.quantity.id_for_label }}" style="font-weight: 600; display: block; margin-bottom: 0.5rem;">Quantity:</label>
+                {{ form.quantity }}
+                {% if form.quantity.errors %}
+                    <div class="error" style="color: #c33; margin-top: 0.25rem; font-size: 0.9rem;">{{ form.quantity.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="{{ form.price.id_for_label }}" style="font-weight: 600; display: block; margin-bottom: 0.5rem;">Price per Unit (KSH):</label>
+                {{ form.price }}
+                {% if form.price.errors %}
+                    <div class="error" style="color: #c33; margin-top: 0.25rem; font-size: 0.9rem;">{{ form.price.errors }}</div>
+                {% endif %}
+                <small style="color: #666; font-size: 0.9rem;">Leave blank to use default product price: KSH {{ product.cost }}</small>
+            </div>
+
+            {% if product.offer %}
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="{{ form.offer.id_for_label }}" style="font-weight: 600; display: block; margin-bottom: 0.5rem;">Special Offer:</label>
+                {{ form.offer }}
+                {% if form.offer.errors %}
+                    <div class="error" style="color: #c33; margin-top: 0.25rem; font-size: 0.9rem;">{{ form.offer.errors }}</div>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            {% if product %}
+            <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #dee2e6;">
+                <h3 style="margin: 0 0 0.5rem 0; color: #2c3e50;">Order Summary</h3>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Unit Price:</span>
+                    <span>KSH {{ product.cost }}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Quantity:</span>
+                    <span id="quantity-display">{{ form.quantity.value|default:1 }}</span>
+                </div>
+                <hr style="margin: 0.5rem 0; border: none; border-top: 1px solid #dee2e6;">
+                <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.1rem;">
+                    <span>Total Price:</span>
+                    <span id="total-price">KSH {{ product.cost }}</span>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="{{ form.customer_name.id_for_label }}" style="font-weight: 600; display: block; margin-bottom: 0.5rem;">Your Name:</label>
+                {{ form.customer_name }}
+                {% if form.customer_name.errors %}
+                    <div class="error" style="color: #c33; margin-top: 0.25rem; font-size: 0.9rem;">{{ form.customer_name.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="{{ form.customer_number.id_for_label }}" style="font-weight: 600; display: block; margin-bottom: 0.5rem;">Phone Number:</label>
+                {{ form.customer_number }}
+                {% if form.customer_number.errors %}
+                    <div class="error" style="color: #c33; margin-top: 0.25rem; font-size: 0.9rem;">{{ form.customer_number.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="{{ form.customer_location.id_for_label }}" style="font-weight: 600; display: block; margin-bottom: 0.5rem;">Location/Address:</label>
+                {{ form.customer_location }}
+                {% if form.customer_location.errors %}
+                    <div class="error" style="color: #c33; margin-top: 0.25rem; font-size: 0.9rem;">{{ form.customer_location.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button type="submit" class="btn" style="background: #ff7f31; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-size: 1rem; flex: 1; cursor: pointer;">
+                    Submit Order
+                </button>
+                <a href="{% url 'suppliers:product_list' %}" class="btn" style="background: #e0e0e0; color: #333; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-size: 1rem; text-decoration: none; text-align: center;">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const quantityInput = document.getElementById('{{ form.quantity.id_for_label }}');
+    const quantityDisplay = document.getElementById('quantity-display');
+    const totalPriceDisplay = document.getElementById('total-price');
+    const unitPrice = {{ product.cost|default:0 }};
+
+    function updatePrice() {
+        const quantity = parseInt(quantityInput.value) || 1;
+        const totalPrice = quantity * unitPrice;
+
+        quantityDisplay.textContent = quantity;
+        totalPriceDisplay.textContent = 'KSH ' + totalPrice.toLocaleString();
+    }
+
+    if (quantityInput) {
+        quantityInput.addEventListener('input', updatePrice);
+        quantityInput.addEventListener('change', updatePrice);
+    }
+
+    // Update price on page load
+    updatePrice();
+});
+</script>
+
+{% endblock %}

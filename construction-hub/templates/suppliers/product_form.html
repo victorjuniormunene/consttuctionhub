@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="supplier-dashboard">
+  <div class="container">
+    <div class="section-card">
+      <div class="section-header">
+        <h2 class="section-title">{% if form.instance.pk %}✏️ Edit Product{% else %}➕ Add New Product{% endif %}</h2>
+        <a href="{% url 'dashboard:supplier_dashboard' %}" class="btn-secondary">← Back to Dashboard</a>
+      </div>
+      
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+          <!-- Basic Info -->
+          <div style="background: linear-gradient(135deg, #f8f9fa, #e9ecef); padding: 1.5rem; border-radius: 12px;">
+            <h4 style="margin-bottom: 1rem; color: #1a1a2e;">📦 Basic Information</h4>
+            
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #495057;">Product Name *</label>
+              {{ form.name }}
+              {% if form.name.errors %}
+                <div style="color: #dc3545; font-size: 0.85rem; margin-top: 0.25rem;">{{ form.name.errors }}</div>
+              {% endif %}
+            </div>
+            
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #495057;">Description *</label>
+              {{ form.description }}
+              {% if form.description.errors %}
+                <div style="color: #dc3545; font-size: 0.85rem; margin-top: 0.25rem;">{{ form.description.errors }}</div>
+              {% endif %}
+            </div>
+            
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #495057;">Category *</label>
+              {{ form.category }}
+              {% if form.category.errors %}
+                <div style="color: #dc3545; font-size: 0.85rem; margin-top: 0.25rem;">{{ form.category.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+          
+          <!-- Pricing & Stock -->
+          <div style="background: linear-gradient(135deg, #f8f9fa, #e9ecef); padding: 1.5rem; border-radius: 12px;">
+            <h4 style="margin-bottom: 1rem; color: #1a1a2e;">💰 Pricing & Stock</h4>
+            
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #495057;">Price (KSH) *</label>
+              {{ form.cost }}
+              {% if form.cost.errors %}
+                <div style="color: #dc3545; font-size: 0.85rem; margin-top: 0.25rem;">{{ form.cost.errors }}</div>
+              {% endif %}
+            </div>
+            
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #495057;">Available Quantity *</label>
+              {{ form.available_quantity }}
+              {% if form.available_quantity.errors %}
+                <div style="color: #dc3545; font-size: 0.85rem; margin-top: 0.25rem;">{{ form.available_quantity.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+          
+          <!-- Offer Section -->
+          <div style="background: linear-gradient(135deg, #fff3cd, #ffeeba); padding: 1.5rem; border-radius: 12px; border: 2px solid #ffc107;">
+            <h4 style="margin-bottom: 1rem; color: #1a1a2e;">🏷️ Special Offer</h4>
+            <p style="color: #6c757d; font-size: 0.9rem; margin-bottom: 1rem;">Add a special offer to attract more customers!</p>
+            
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #495057;">Select Offer</label>
+              {{ form.offer }}
+              {% if form.offer.errors %}
+                <div style="color: #dc3545; font-size: 0.85rem; margin-top: 0.25rem;">{{ form.offer.errors }}</div>
+              {% endif %}
+            </div>
+            
+            <div style="background: white; padding: 1rem; border-radius: 8px; font-size: 0.85rem;">
+              <p style="margin: 0; color: #495057;"><strong>Available Offers:</strong></p>
+              <ul style="margin: 0.5rem 0 0 0; padding-left: 1.2rem; color: #6c757d;">
+                <li><strong>No Offer</strong> - Regular price (select empty)</li>
+                <li><strong>Free Delivery</strong> - Customers get free delivery</li>
+                <li><strong>10% Discount</strong> - Customers get 10% off</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: flex-end;">
+          <a href="{% url 'dashboard:supplier_dashboard' %}" class="btn-secondary">Cancel</a>
+          <button type="submit" class="btn-primary">
+            {% if form.instance.pk %}💾 Save Changes{% else %}➕ Create Product{% endif %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Form field styling */
+  #id_name, #id_description, #id_category, #id_cost, #id_available_quantity, #id_offer {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #e0e7ff;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+  }
+  
+  #id_name:focus, #id_description:focus, #id_category:focus, #id_cost:focus, #id_available_quantity:focus, #id_offer:focus {
+    border-color: #ff7f31;
+    box-shadow: 0 0 0 4px rgba(255, 127, 49, 0.1);
+    outline: none;
+  }
+  
+  #id_description {
+    min-height: 100px;
+    resize: vertical;
+  }
+  
+  /* Button styles */
+  .btn-primary {
+    background: linear-gradient(135deg, #ff7f31, #ff4500);
+    border: none;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #e66a29, #e03e00);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 127, 49, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+  
+  .btn-secondary {
+    background: white;
+    color: #6c757d;
+    padding: 0.75rem 1.5rem;
+    border: 2px solid #6c757d;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-secondary:hover {
+    background: #6c757d;
+    color: white;
+    text-decoration: none;
+  }
+  
+  /* Dashboard styles */
+  .supplier-dashboard {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  .section-card {
+    background: white;
+    border: none;
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+  
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f0f0f0;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0;
+  }
+</style>
+{% endblock %}
